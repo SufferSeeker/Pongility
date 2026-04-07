@@ -32,12 +32,22 @@ public class BallController : MonoBehaviour
     {
         if (Collision.gameObject.CompareTag("Player"))
         {
-            float HitOffset = (transform.position.x - Collision.transform.position.x);
+            float HitOffset = transform.position.x - Collision.transform.position.x;
 
             Vector2 NewDirection = new Vector2(HitOffset, 1f).normalized;
 
             Rigidbody.velocity = NewDirection * BallSpeed;
         }
+
+        if (Collision.gameObject.CompareTag("Enemy"))
+        {
+            float HitOffset = transform.position.x - Collision.transform.position.x;
+
+            Vector2 NewDirection = new Vector2(HitOffset, -1f).normalized;
+
+            Rigidbody.velocity = NewDirection * BallSpeed;
+        }
+
     }
 
     private void OnTriggerEnter2D(Collider2D Collision)

@@ -1,47 +1,43 @@
 using UnityEngine;
 
-public class PlayerRacketController : MonoBehaviour
+public class EnemyRacketController : MonoBehaviour
 {
     [Header("Components")]
     [SerializeField] private Rigidbody2D Rigidbody;
 
+    [Header("References")]
+    [SerializeField] private Transform Ball;
+
     [Header("Move Settings")]
     [SerializeField] private float MovementSpeed = 5f;
-    [SerializeField] private float HorizontalInput;
 
     [Header("Limits")]
     [SerializeField] private float MinX;
     [SerializeField] private float MaxX;
-
-    private void OnEnable()
-    {
-        InputManager.OnMove += HandleMoveInput;
-    }
-
-    private void OnDisable()
-    {
-        InputManager.OnMove -= HandleMoveInput;
-    }
 
     private void Awake()
     {
         Rigidbody = GetComponent<Rigidbody2D>();
     }
 
+    private void Start()
+    {
+        Ball = GameObject.Find("Ball").transform;
+    }
+
     private void FixedUpdate()
     {
-        Move();
+        FollowBall();
         ClampPosition();
     }
 
-    private void HandleMoveInput(float InputValue)
+    private void FollowBall()
     {
-        HorizontalInput = InputValue;
-    }
+        float TargetX = Ball.position.x;
+        float CurrentX = Rigidbody.position.x;
 
-    private void Move()
-    {
-        float HorizontalVelocity = HorizontalInput * MovementSpeed;
+        float Difference = TargetX - CurrentX;
+        float HorizontalVelocity = Difference * MovementSpeed;
 
         if (Rigidbody.position.x <= MinX && HorizontalVelocity < 0f)
         {
