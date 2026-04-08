@@ -1,31 +1,30 @@
 using UnityEngine;
 
-public class BallController : MonoBehaviour
+public class BallController1 : MonoBehaviour
 {
-    [Header("Components")]
-    [SerializeField] private Rigidbody2D Rigidbody;
-
     [Header("Ball Settings")]
     [SerializeField] private float BallSpeed = 4f;
-
-    private void Awake()
-    {
-        Rigidbody = GetComponent<Rigidbody2D>();
-    }
+    [SerializeField] private Vector2 MoveDirection;
 
     private void Start()
     {
         InitialMovement();
     }
 
-    private void FixedUpdate()
+    private void Update()
     {
-
+        Move();
     }
 
     private void InitialMovement()
     {
-        Rigidbody.velocity = Vector2.down.normalized * BallSpeed;
+        MoveDirection = Vector2.down.normalized;
+    }
+
+    private void Move()
+    {
+        Vector3 Movement = (Vector3)(MoveDirection * BallSpeed * Time.deltaTime);
+        transform.position += Movement;
     }
 
     private void OnCollisionEnter2D(Collision2D Collision)
@@ -33,30 +32,22 @@ public class BallController : MonoBehaviour
         if (Collision.gameObject.CompareTag("Player"))
         {
             float HitOffset = transform.position.x - Collision.transform.position.x;
-
             Vector2 NewDirection = new Vector2(HitOffset, 1f).normalized;
 
-            Rigidbody.velocity = NewDirection * BallSpeed;
+            MoveDirection = NewDirection;
         }
 
         if (Collision.gameObject.CompareTag("Enemy"))
         {
             float HitOffset = transform.position.x - Collision.transform.position.x;
-
             Vector2 NewDirection = new Vector2(HitOffset, -1f).normalized;
 
-            Rigidbody.velocity = NewDirection * BallSpeed;
+            MoveDirection = NewDirection;
         }
 
-    }
-
-    private void OnTriggerEnter2D(Collider2D Collision)
-    {
         if (Collision.gameObject.CompareTag("Wall"))
         {
-            Vector2 CurrentVelocity = Rigidbody.velocity;
-
-            Rigidbody.velocity = new Vector2(-CurrentVelocity.x, CurrentVelocity.y);
+            MoveDirection = new Vector2(-MoveDirection.x, MoveDirection.y).normalized;
         }
     }
 }

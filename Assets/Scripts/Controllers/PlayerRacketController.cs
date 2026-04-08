@@ -2,9 +2,6 @@ using UnityEngine;
 
 public class PlayerRacketController : MonoBehaviour
 {
-    [Header("Components")]
-    [SerializeField] private Rigidbody2D Rigidbody;
-
     [Header("Move Settings")]
     [SerializeField] private float MovementSpeed = 5f;
     [SerializeField] private float HorizontalInput;
@@ -23,12 +20,7 @@ public class PlayerRacketController : MonoBehaviour
         InputManager.OnMove -= HandleMoveInput;
     }
 
-    private void Awake()
-    {
-        Rigidbody = GetComponent<Rigidbody2D>();
-    }
-
-    private void FixedUpdate()
+    private void Update()
     {
         Move();
         ClampPosition();
@@ -41,25 +33,17 @@ public class PlayerRacketController : MonoBehaviour
 
     private void Move()
     {
-        float HorizontalVelocity = HorizontalInput * MovementSpeed;
+        Vector3 CurrentPosition = transform.position;
+        float HorizontalMovement = HorizontalInput * MovementSpeed * Time.deltaTime;
 
-        if (Rigidbody.position.x <= MinX && HorizontalVelocity < 0f)
-        {
-            HorizontalVelocity = 0f;
-        }
-
-        if (Rigidbody.position.x >= MaxX && HorizontalVelocity > 0f)
-        {
-            HorizontalVelocity = 0f;
-        }
-
-        Rigidbody.velocity = new Vector2(HorizontalVelocity, 0f);
+        CurrentPosition.x += HorizontalMovement;
+        transform.position = CurrentPosition;
     }
 
     private void ClampPosition()
     {
-        Vector2 CurrentPosition = Rigidbody.position;
+        Vector3 CurrentPosition = transform.position;
         CurrentPosition.x = Mathf.Clamp(CurrentPosition.x, MinX, MaxX);
-        Rigidbody.position = CurrentPosition;
+        transform.position = CurrentPosition;
     }
 }
