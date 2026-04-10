@@ -1,17 +1,28 @@
 using UnityEngine;
 
-public class EnemyRacketController1 : MonoBehaviour
+public class EnemyRacketController : MonoBehaviour
 {
     [Header("References")]
     [SerializeField] private Transform Ball;
 
     [Header("Move Settings")]
     [SerializeField] private float MovementSpeed = 5f;
+    [SerializeField] private bool CanFollow = true;
 
     [Header("Limits")]
     [SerializeField] private float MinX;
     [SerializeField] private float MaxX;
 
+    private void OnEnable()
+    {
+        MatchManager.OnMatchEnded += HandleMatchEnded;
+    }
+
+    private void OnDisable()
+    {
+        MatchManager.OnMatchEnded -= HandleMatchEnded;
+    }
+    
     private void Start()
     {
         Ball = GameObject.Find("Ball").transform;
@@ -19,8 +30,15 @@ public class EnemyRacketController1 : MonoBehaviour
 
     private void Update()
     {
+        if (!CanFollow) return;
+
         FollowBall();
         ClampPosition();
+    }
+
+    private void HandleMatchEnded()
+    {
+        CanFollow = false;
     }
 
     private void FollowBall()

@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 1466740319128257159}
   - component: {fileID: 2786508018836082841}
   - component: {fileID: 5941977155578872502}
+  - component: {fileID: 2956224939174006722}
   m_Layer: 0
   m_Name: Managers
   m_TagString: Untagged
@@ -45,6 +46,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7c25a004d97cfb54cb905acf6af50ee8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  SelectedMatchSettings: {fileID: 0}
 --- !u!114 &5941977155578872502
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -57,3 +59,20 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 74f64ed839e488a488e799f2690f5689, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &2956224939174006722
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 223026827497924347}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 361f373fb7a52994c95779d64b158f45, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  GameMode: 0
+  GameType: 1
+  EnemyDifficulty: 1
+  TargetScore: 10
+  MatchDurationSeconds: 300

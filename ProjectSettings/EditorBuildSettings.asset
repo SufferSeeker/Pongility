@@ -11,4 +11,7 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/Classic.unity
     guid: 960c9dfef77b2cb4989770f69d7d9810
+  - enabled: 1
+    path: Assets/Scenes/Pongility.unity
+    guid: b04be36c0be34304d8e4e3dd011374fc
   m_configObjects: {}

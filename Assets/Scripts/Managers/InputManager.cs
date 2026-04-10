@@ -3,36 +3,60 @@ using UnityEngine;
 
 public class InputManager : MonoBehaviour
 {
-    public static event Action<float> OnMove;
+    public static event Action<float> OnPlayer1Move;
+    public static event Action<float> OnPlayer2Move;
     public static event Action OnPause;
 
-    private float HorizontalInput;
+    private float Player1Input;
+    private float Player2Input;
 
     private void Update()
     {
-        GetMoveInput();
+        GetPlayer1Input();
+        GetPlayer2Input();
         GetPauseInput();
     }
 
-    private void GetMoveInput()
+    private void GetPlayer1Input()
     {
         if (Input.GetKey(KeyCode.A))
         {
-            HorizontalInput = -1f;
+            Player1Input = -1f;
         }
 
         else if (Input.GetKey(KeyCode.D))
         {
-            HorizontalInput = 1f;
+            Player1Input = 1f;
         }
 
         else
         {
-            HorizontalInput = 0f;
+            Player1Input = 0f;
         }
 
-        OnMove?.Invoke(HorizontalInput);
+        OnPlayer1Move?.Invoke(Player1Input);
     }
+
+    private void GetPlayer2Input()
+    {
+        if (Input.GetKey(KeyCode.LeftArrow))
+        {
+            Player2Input = -1f;
+        }
+
+        else if (Input.GetKey(KeyCode.RightArrow))
+        {
+            Player2Input = 1f;
+        }
+
+        else
+        {
+            Player2Input = 0f;
+        }
+
+        OnPlayer2Move?.Invoke(Player2Input);
+    }
+
 
     private void GetPauseInput()
     {
