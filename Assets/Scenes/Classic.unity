@@ -1272,7 +1272,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b816bd2c840330e46a407e054fac2e7a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  GoalOwner: 0
+  GoalOwner: 2
 --- !u!1 &916345166
 GameObject:
   m_ObjectHideFlags: 0

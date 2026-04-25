@@ -18,6 +18,8 @@ public class BallController : MonoBehaviour
     [SerializeField] private float MaxX = 3.5f;
     [SerializeField] private float GizmoHeight = 12f;
 
+    [SerializeField] private MatchSide LastHitSide = MatchSide.None;
+
     private void OnEnable()
     {
         GoalZone.OnGoalScored += HandleGoalScored;
@@ -136,6 +138,11 @@ public class BallController : MonoBehaviour
         }
     }
 
+    public MatchSide GetLastHitSide()
+    {
+        return LastHitSide;
+    }
+
     private void OnCollisionEnter2D(Collision2D Collision)
     {
         RacketSideIdentifier RacketSideIdentifier = Collision.gameObject.GetComponent<RacketSideIdentifier>();
@@ -144,6 +151,7 @@ public class BallController : MonoBehaviour
         {
             float HitOffset = transform.position.x - Collision.transform.position.x;
             MatchSide RacketSide = RacketSideIdentifier.GetRacketSide();
+            LastHitSide = RacketSide;
 
             if (RacketSide == MatchSide.Player1)
             {

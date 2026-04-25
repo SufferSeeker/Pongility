@@ -6,7 +6,7 @@ public class UIManager : MonoBehaviour
 {
     [Header("References")]
     [SerializeField] private GameObject MainMenuPanel;
-    [SerializeField] private GameObject AchievementsPanel;
+    [SerializeField] private GameObject TrophiesPanel;
     [SerializeField] private GameObject OptionsPanel;
     [SerializeField] private GameObject ExtrasPanel;
     [SerializeField] private GameObject ModeSelectionPanel;
@@ -24,7 +24,7 @@ public class UIManager : MonoBehaviour
     private void Awake()
     {
         MainMenuPanel = GameObject.Find("Main Menu Panel");
-        AchievementsPanel = GameObject.Find("Achievements Panel");
+        TrophiesPanel = GameObject.Find("Trophies Panel");
         OptionsPanel = GameObject.Find("Options Panel");
         ExtrasPanel = GameObject.Find("Extras Panel");
         ModeSelectionPanel = GameObject.Find("Mode Selection Panel");
@@ -38,7 +38,7 @@ public class UIManager : MonoBehaviour
     void Start()
     {
         if (MainMenuPanel) MainMenuPanel.SetActive(true);
-        if (AchievementsPanel) AchievementsPanel.SetActive(false);
+        if (TrophiesPanel) TrophiesPanel.SetActive(false);
         if (OptionsPanel) OptionsPanel.SetActive(false);
         if (ExtrasPanel) ExtrasPanel.SetActive(false);
         if (ModeSelectionPanel) ModeSelectionPanel.SetActive(false);
@@ -66,7 +66,7 @@ public class UIManager : MonoBehaviour
         Debug.Log("Achievements button'a basýldý.");
 
         MainMenuPanel.SetActive(false);
-        AchievementsPanel.SetActive(true);
+        TrophiesPanel.SetActive(true);
     }
 
     public void OnOptionsButtonPressed()
@@ -147,7 +147,7 @@ public class UIManager : MonoBehaviour
     {
         Debug.Log("Achievements back button'a basýldý.");
 
-        AchievementsPanel.SetActive(false);
+        TrophiesPanel.SetActive(false);
         MainMenuPanel.SetActive(true);
     }
 

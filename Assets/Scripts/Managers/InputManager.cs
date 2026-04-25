@@ -3,6 +3,10 @@ using UnityEngine;
 
 public class InputManager : MonoBehaviour
 {
+    public static event Action OnPlayer1PreviousAbilitySlot;
+    public static event Action OnPlayer1NextAbilitySlot;
+    public static event Action OnPlayer1UseSelectedAbility;
+
     public static event Action<float> OnPlayer1Move;
     public static event Action<float> OnPlayer2Move;
     public static event Action OnPause;
@@ -15,6 +19,8 @@ public class InputManager : MonoBehaviour
         GetPlayer1Input();
         GetPlayer2Input();
         GetPauseInput();
+
+        GetPlayer1AbilitySlotInput();
     }
 
     private void GetPlayer1Input()
@@ -57,12 +63,30 @@ public class InputManager : MonoBehaviour
         OnPlayer2Move?.Invoke(Player2Input);
     }
 
-
+    
     private void GetPauseInput()
     {
         if (Input.GetKeyDown(KeyCode.Escape))
         {
             OnPause?.Invoke();
+        }
+    }
+
+    private void GetPlayer1AbilitySlotInput()
+    {
+        if (Input.GetKeyDown(KeyCode.J))
+        {
+            OnPlayer1PreviousAbilitySlot?.Invoke();
+        }
+
+        if (Input.GetKeyDown(KeyCode.L))
+        {
+            OnPlayer1NextAbilitySlot?.Invoke();
+        }
+
+        if (Input.GetKeyDown(KeyCode.K))
+        {
+            OnPlayer1UseSelectedAbility?.Invoke();
         }
     }
 }

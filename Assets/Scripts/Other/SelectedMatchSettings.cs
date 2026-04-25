@@ -23,6 +23,7 @@ public enum EnemyDifficulty
 
 public enum MatchSide
 {
+    None,
     Player1,
     Player2
 }
