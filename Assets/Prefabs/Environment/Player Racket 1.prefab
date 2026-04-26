@@ -13,6 +13,7 @@ GameObject:
   - component: {fileID: 1071622901741736687}
   - component: {fileID: 6558492388201077248}
   - component: {fileID: 6027637233577730705}
+  - component: {fileID: 2826126124173849467}
   m_Layer: 0
   m_Name: Player Racket 1
   m_TagString: Player
@@ -168,6 +169,21 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   RacketSide: 1
+--- !u!114 &2826126124173849467
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 339426058460707613}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 88cb549dd245c4a43bedb7ef47a8c19c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  TargetSide: 1
+  MaxHealth: 100
+  CurrentHealth: 0
 --- !u!1 &495601082857816229
 GameObject:
   m_ObjectHideFlags: 0

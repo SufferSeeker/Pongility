@@ -6,8 +6,8 @@ public class GoalZone : MonoBehaviour
     public static Action<MatchSide> OnGoalScored;
 
     [Header("Goal Settings")]
-    [SerializeField] private MatchSide GoalOwner;
-    
+    [SerializeField] private MatchSide ScoringSide;
+
     private void OnTriggerEnter2D(Collider2D Collision)
     {
         if (Collision.CompareTag("Ball") == false)
@@ -15,14 +15,6 @@ public class GoalZone : MonoBehaviour
             return;
         }
 
-        if (GoalOwner == MatchSide.Player1)
-        {
-            OnGoalScored?.Invoke(MatchSide.Player2);
-        }
-
-        else if (GoalOwner == MatchSide.Player2)
-        {
-            OnGoalScored?.Invoke(MatchSide.Player1);
-        }
+        OnGoalScored?.Invoke(ScoringSide);
     }
 }
