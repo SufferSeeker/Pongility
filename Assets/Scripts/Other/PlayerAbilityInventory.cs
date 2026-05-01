@@ -18,16 +18,36 @@ public class PlayerAbilityInventory : MonoBehaviour
 
     private void OnEnable()
     {
-        InputManager.OnPlayer1PreviousAbilitySlot += SelectPreviousSlot;
-        InputManager.OnPlayer1NextAbilitySlot += SelectNextSlot;
-        InputManager.OnPlayer1UseSelectedAbility += UseSelectedAbility;
+        if (PlayerSide == MatchSide.Player1)
+        {
+            InputManager.OnPlayer1PreviousAbilitySlot += SelectPreviousSlot;
+            InputManager.OnPlayer1NextAbilitySlot += SelectNextSlot;
+            InputManager.OnPlayer1UseSelectedAbility += UseSelectedAbility;
+        }
+
+        else if (PlayerSide == MatchSide.Player2)
+        {
+            InputManager.OnPlayer2PreviousAbilitySlot += SelectPreviousSlot;
+            InputManager.OnPlayer2NextAbilitySlot += SelectNextSlot;
+            InputManager.OnPlayer2UseSelectedAbility += UseSelectedAbility;
+        }
     }
 
     private void OnDisable()
     {
-        InputManager.OnPlayer1PreviousAbilitySlot -= SelectPreviousSlot;
-        InputManager.OnPlayer1NextAbilitySlot -= SelectNextSlot;
-        InputManager.OnPlayer1UseSelectedAbility -= UseSelectedAbility;
+        if (PlayerSide == MatchSide.Player1)
+        {
+            InputManager.OnPlayer1PreviousAbilitySlot -= SelectPreviousSlot;
+            InputManager.OnPlayer1NextAbilitySlot -= SelectNextSlot;
+            InputManager.OnPlayer1UseSelectedAbility -= UseSelectedAbility;
+        }
+
+        else if (PlayerSide == MatchSide.Player2)
+        {
+            InputManager.OnPlayer2PreviousAbilitySlot -= SelectPreviousSlot;
+            InputManager.OnPlayer2NextAbilitySlot -= SelectNextSlot;
+            InputManager.OnPlayer2UseSelectedAbility -= UseSelectedAbility;
+        }
     }
 
     public MatchSide GetPlayerSide()

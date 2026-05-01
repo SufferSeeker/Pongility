@@ -43,6 +43,7 @@ GameObject:
   - component: {fileID: 6374655887021596769}
   - component: {fileID: 4524270804247898119}
   - component: {fileID: 600764108284853189}
+  - component: {fileID: 8332115788114341107}
   - component: {fileID: 8152035385753049870}
   - component: {fileID: 7745217063271866054}
   m_Layer: 0
@@ -113,12 +114,12 @@ SpriteRenderer:
   m_SortingLayerID: -2043388047
   m_SortingLayer: 1
   m_SortingOrder: 0
-  m_Sprite: {fileID: 21300000, guid: a4982f2057c8b254c86d14ed785a15d6, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 998b7296e0798bf41bbbc15bbf9aa10b, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
-  m_Size: {x: 1, y: 1}
+  m_Size: {x: 2, y: 1}
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 1
@@ -161,7 +162,7 @@ BoxCollider2D:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0.5, y: 0.5}
     oldSize: {x: 2, y: 1}
-    newSize: {x: 1, y: 1}
+    newSize: {x: 2, y: 1}
     adaptiveTilingThreshold: 0.5
     drawMode: 0
     adaptiveTiling: 0
@@ -185,6 +186,23 @@ MonoBehaviour:
   MovementSpeed: 5
   HorizontalInput: 0
   CanMove: 1
+  MinX: -3.85
+  MaxX: 3.85
+--- !u!114 &8332115788114341107
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1452770745542540880}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d360df309140c264ab7d17e508716765, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Ball: {fileID: 0}
+  MovementSpeed: 5
+  CanFollow: 1
   MinX: -3.85
   MaxX: 3.85
 --- !u!114 &8152035385753049870

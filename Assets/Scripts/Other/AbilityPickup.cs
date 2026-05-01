@@ -9,6 +9,24 @@ public class AbilityPickup : MonoBehaviour
     [SerializeField] private PlayerAbilityInventory Player1Inventory;
     [SerializeField] private PlayerAbilityInventory Player2Inventory;
 
+    private void Awake()
+    {
+        PlayerAbilityInventory[] Inventories = FindObjectsByType<PlayerAbilityInventory>(FindObjectsSortMode.None);
+
+        foreach (PlayerAbilityInventory Inventory in Inventories)
+        {
+            if (Inventory.GetPlayerSide() == MatchSide.Player1)
+            {
+                Player1Inventory = Inventory;
+            }
+
+            else if (Inventory.GetPlayerSide() == MatchSide.Player2)
+            {
+                Player2Inventory = Inventory;
+            }
+        }
+    }
+
     private void OnTriggerEnter2D(Collider2D Collision)
     {
         BallController BallController = Collision.GetComponent<BallController>();

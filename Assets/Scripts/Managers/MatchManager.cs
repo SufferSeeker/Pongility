@@ -9,7 +9,8 @@ public class MatchManager : MonoBehaviour
     [SerializeField] private SelectedMatchSettings SelectedMatchSettings;
 
     [SerializeField] private GameObject PlayerRacket2;
-    [SerializeField] private GameObject EnemyRacket;
+    [SerializeField] private PlayerRacketController Player2ManualController;
+    [SerializeField] private EnemyRacketController Player2AIController;
 
     [Header("UI")]
     [SerializeField] private GameObject MatchResultPanel;
@@ -53,7 +54,9 @@ public class MatchManager : MonoBehaviour
         SelectedMatchSettings = FindObjectOfType<SelectedMatchSettings>();
 
         PlayerRacket2 = GameObject.Find("Player Racket 2");
-        EnemyRacket = GameObject.Find("Enemy Racket");
+
+        Player2ManualController = PlayerRacket2.GetComponent<PlayerRacketController>();
+        Player2AIController = PlayerRacket2.GetComponent<EnemyRacketController>();
 
         MatchResultPanel = GameObject.Find("Match Result Panel");
 
@@ -67,8 +70,7 @@ public class MatchManager : MonoBehaviour
         TimeText = GameObject.Find("Time Text").GetComponent<TextMeshProUGUI>();
 
         MatchResultPanel.SetActive(false);
-        PlayerRacket2.SetActive(false);
-        EnemyRacket.SetActive(false);
+        PlayerRacket2.SetActive(true);
     }
 
     private void Start()
@@ -164,16 +166,18 @@ public class MatchManager : MonoBehaviour
     {
         if (SelectedMatchSettings == null) return;
 
+        PlayerRacket2.SetActive(true);
+
         if (SelectedMatchSettings.GameMode == GameMode.Singleplayer)
         {
-            EnemyRacket.SetActive(true);
-            PlayerRacket2.SetActive(false);
+            Player2ManualController.enabled = false;
+            Player2AIController.enabled = true;
         }
 
         else if (SelectedMatchSettings.GameMode == GameMode.Multiplayer)
         {
-            EnemyRacket.SetActive(false);
-            PlayerRacket2.SetActive(true);
+            Player2ManualController.enabled = true;
+            Player2AIController.enabled = false;
         }
     }
 
