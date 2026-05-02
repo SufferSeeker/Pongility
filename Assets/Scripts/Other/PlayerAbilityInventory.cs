@@ -16,6 +16,9 @@ public class PlayerAbilityInventory : MonoBehaviour
     [SerializeField] private Transform RacketLeft;
     [SerializeField] private Transform RacketRight;
 
+    [Header("State")]
+    [SerializeField] private bool CanUseAbilities = true;
+
     private void OnEnable()
     {
         if (PlayerSide == MatchSide.Player1)
@@ -31,6 +34,8 @@ public class PlayerAbilityInventory : MonoBehaviour
             InputManager.OnPlayer2NextAbilitySlot += SelectNextSlot;
             InputManager.OnPlayer2UseSelectedAbility += UseSelectedAbility;
         }
+
+        MatchManager.OnMatchEnded += HandleMatchEnded;
     }
 
     private void OnDisable()
@@ -48,6 +53,13 @@ public class PlayerAbilityInventory : MonoBehaviour
             InputManager.OnPlayer2NextAbilitySlot -= SelectNextSlot;
             InputManager.OnPlayer2UseSelectedAbility -= UseSelectedAbility;
         }
+
+        MatchManager.OnMatchEnded -= HandleMatchEnded;
+    }
+
+    private void HandleMatchEnded()
+    {
+        CanUseAbilities = false;
     }
 
     public MatchSide GetPlayerSide()
@@ -81,6 +93,8 @@ public class PlayerAbilityInventory : MonoBehaviour
 
     private void SelectPreviousSlot()
     {
+        if (CanUseAbilities == false) return;
+        
         SelectedSlotIndex--;
 
         if (SelectedSlotIndex < 0)
@@ -91,6 +105,8 @@ public class PlayerAbilityInventory : MonoBehaviour
 
     private void SelectNextSlot()
     {
+        if (CanUseAbilities == false) return;
+
         SelectedSlotIndex++;
 
         if (SelectedSlotIndex >= AbilitySlots.Length)
@@ -106,6 +122,8 @@ public class PlayerAbilityInventory : MonoBehaviour
 
     private void UseSelectedAbility()
     {
+        if (CanUseAbilities == false) return;
+
         AbilityDefinition SelectedAbility = AbilitySlots[SelectedSlotIndex];
 
         if (SelectedAbility == null)
@@ -192,5 +210,10 @@ public class PlayerAbilityInventory : MonoBehaviour
         }
 
         return Vector2.zero;
+    }
+
+    public void SetCanUseAbilities(bool CanUseAbilitiesValue)
+    {
+        CanUseAbilities = CanUseAbilitiesValue;
     }
 }

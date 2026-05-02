@@ -11,7 +11,7 @@ public class BallController : MonoBehaviour
     [SerializeField] private float RestartDelay = 1f;
     [SerializeField] private Vector3 StartPosition;
     [SerializeField] private bool IsMatchFinished;
-
+    
     [Header("Clamp Settings")]
     [SerializeField] private bool UseHorizontalClamp = true;
     [SerializeField] private float MinX = -3.5f;
@@ -22,13 +22,11 @@ public class BallController : MonoBehaviour
 
     private void OnEnable()
     {
-        GoalZone.OnGoalScored += HandleGoalScored;
         MatchManager.OnMatchEnded += HandleMatchEnded;
     }
 
     private void OnDisable()
     {
-        GoalZone.OnGoalScored -= HandleGoalScored;
         MatchManager.OnMatchEnded -= HandleMatchEnded;
     }
 
@@ -48,16 +46,6 @@ public class BallController : MonoBehaviour
         Move();
     }
 
-    private void HandleGoalScored(MatchSide ScoringSide)
-    {
-        if (IsMatchFinished)
-        {
-            return;
-        }
-
-        StartCoroutine(ResetBallRoutine());
-    }
-
     private void HandleMatchEnded()
     {
         IsMatchFinished = true;
@@ -74,13 +62,29 @@ public class BallController : MonoBehaviour
         SetRandomStartDirection();
     }
 
-    private IEnumerator ResetBallRoutine()
+    public void StopBallForRound()
     {
+        if (IsMatchFinished) return;
+        
+        StopAllCoroutines();
+        MoveDirection = Vector2.zero;
+    }
+
+    public void ResetBallForRound()
+    {
+        if (IsMatchFinished) return;
+        
+        StopAllCoroutines();
+
         MoveDirection = Vector2.zero;
         transform.position = StartPosition;
+        LastHitSide = MatchSide.None;
+    }
 
-        yield return new WaitForSeconds(RestartDelay);
-
+    public void LaunchBall()
+    {
+        if (IsMatchFinished) return;
+        
         SetRandomStartDirection();
     }
 

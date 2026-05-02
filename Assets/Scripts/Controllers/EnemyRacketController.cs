@@ -22,7 +22,7 @@ public class EnemyRacketController : MonoBehaviour
     {
         MatchManager.OnMatchEnded -= HandleMatchEnded;
     }
-    
+
     private void Start()
     {
         Ball = GameObject.Find("Ball").transform;
@@ -31,7 +31,7 @@ public class EnemyRacketController : MonoBehaviour
     private void Update()
     {
         if (!CanFollow) return;
-
+        
         FollowBall();
         ClampPosition();
     }
@@ -55,5 +55,10 @@ public class EnemyRacketController : MonoBehaviour
         Vector3 CurrentPosition = transform.position;
         CurrentPosition.x = Mathf.Clamp(CurrentPosition.x, MinX, MaxX);
         transform.position = CurrentPosition;
+    }
+
+    public void SetCanFollow(bool CanFollowValue)
+    {
+        CanFollow = CanFollowValue;
     }
 }

@@ -78,4 +78,14 @@ public class PlayerRacketController : MonoBehaviour
         CurrentPosition.x = Mathf.Clamp(CurrentPosition.x, MinX, MaxX);
         transform.position = CurrentPosition;
     }
+
+    public void SetCanMove(bool CanMoveValue)
+    {
+        CanMove = CanMoveValue;
+
+        if (CanMove == false)
+        {
+            HorizontalInput = 0f;
+        }
+    }
 }
