@@ -12,12 +12,11 @@ public enum GameType
     Classic
 }
 
-public enum EnemyDifficulty
+public enum Difficulty
 {
     Easy,
-    Medium,
+    Normal,
     Hard,
-    VeryHard,
     Insane
 }
 
@@ -33,8 +32,8 @@ public class SelectedMatchSettings : MonoBehaviour
     [Header("Game Settings")]
     public GameMode GameMode = GameMode.Singleplayer;
     public GameType GameType = GameType.Classic;
-    public EnemyDifficulty EnemyDifficulty = EnemyDifficulty.Medium;
-    
+    public Difficulty Difficulty = Difficulty.Easy;
+
     [Header("Match Rules")]
     public int TargetScore = 10;
     public float MatchDurationSeconds = 300f;

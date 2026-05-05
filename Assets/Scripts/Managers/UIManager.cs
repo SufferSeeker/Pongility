@@ -14,12 +14,12 @@ public class UIManager : MonoBehaviour
     [SerializeField] private GameObject MatchSettingsPanel;
     [SerializeField] private SelectedMatchSettings SelectedMatchSettings;
 
-    [Header("Match Settings Texts")]
-    [SerializeField] private TextMeshProUGUI EnemyDifficultyText;
-    [SerializeField] private TextMeshProUGUI ScoreText;
-    [SerializeField] private TextMeshProUGUI TimeText;
-    [SerializeField] private Button EnemyDifficultyButton;
-    [SerializeField] private TextMeshProUGUI EnemyDifficultyInfoText;
+    [Header("Match Settings References")]
+    [SerializeField] private Button DifficultyButton;
+    [SerializeField] private TextMeshProUGUI DifficultyInfoText;
+    [SerializeField] private MatchSettingButtonView TimeButtonView;
+    [SerializeField] private MatchSettingButtonView ScoreButtonView;
+    [SerializeField] private MatchSettingButtonView DifficultyButtonView;
 
     private void Awake()
     {
@@ -30,9 +30,13 @@ public class UIManager : MonoBehaviour
         ModeSelectionPanel = GameObject.Find("Mode Selection Panel");
         GameSelectionPanel = GameObject.Find("Game Selection Panel");
         MatchSettingsPanel = GameObject.Find("Match Settings Panel");
+        
+        DifficultyButton = GameObject.Find("Difficulty Button").GetComponent<Button>();
+        DifficultyInfoText = GameObject.Find("Difficulty Info Text").GetComponent<TextMeshProUGUI>();
 
-        EnemyDifficultyButton = GameObject.Find("Enemy Difficulty Button").GetComponent<Button>();
-        EnemyDifficultyInfoText = GameObject.Find("Enemy Difficulty Info Text").GetComponent<TextMeshProUGUI>();
+        TimeButtonView = GameObject.Find("Time Button").GetComponent<MatchSettingButtonView>();
+        ScoreButtonView = GameObject.Find("Score Button").GetComponent<MatchSettingButtonView>();
+        DifficultyButtonView = GameObject.Find("Difficulty Button").GetComponent<MatchSettingButtonView>();
     }
 
     void Start()
@@ -47,10 +51,10 @@ public class UIManager : MonoBehaviour
 
         SelectedMatchSettings = FindObjectOfType<SelectedMatchSettings>();
 
-        UpdateEnemyDifficultyText();
-        UpdateEnemyDifficultyAvailability();
-        UpdateScoreText();
-        UpdateTimeText();
+        UpdateDifficultyButtonVisual();
+        UpdateDifficultyAvailability();
+        UpdateScoreButtonVisual();
+        UpdateTimeButtonVisual();
     }
 
     public void OnPlayButtonPressed()
@@ -96,7 +100,7 @@ public class UIManager : MonoBehaviour
 
         SelectedMatchSettings.GameMode = GameMode.Singleplayer;
 
-        UpdateEnemyDifficultyAvailability();
+        UpdateDifficultyAvailability();
 
         ModeSelectionPanel.SetActive(false);
         GameSelectionPanel.SetActive(true);
@@ -108,7 +112,7 @@ public class UIManager : MonoBehaviour
 
         SelectedMatchSettings.GameMode = GameMode.Multiplayer;
 
-        UpdateEnemyDifficultyAvailability();
+        UpdateDifficultyAvailability();
 
         ModeSelectionPanel.SetActive(false);
         GameSelectionPanel.SetActive(true);
@@ -191,34 +195,30 @@ public class UIManager : MonoBehaviour
         GameSelectionPanel.SetActive(true);
     }
 
-    public void OnEnemyDifficultyButtonPressed()
+    public void OnDifficultyButtonPressed()
     {
-        Debug.Log("EnemyDifficulty button'a basýldý.");
+        Debug.Log("Difficulty button'a basýldý.");
 
-        switch (SelectedMatchSettings.EnemyDifficulty)
+        switch (SelectedMatchSettings.Difficulty)
         {
-            case EnemyDifficulty.Easy:
-                SelectedMatchSettings.EnemyDifficulty = EnemyDifficulty.Medium;
+            case Difficulty.Easy:
+                SelectedMatchSettings.Difficulty = Difficulty.Normal;
                 break;
 
-            case EnemyDifficulty.Medium:
-                SelectedMatchSettings.EnemyDifficulty = EnemyDifficulty.Hard;
+            case Difficulty.Normal:
+                SelectedMatchSettings.Difficulty = Difficulty.Hard;
                 break;
 
-            case EnemyDifficulty.Hard:
-                SelectedMatchSettings.EnemyDifficulty = EnemyDifficulty.VeryHard;
+            case Difficulty.Hard:
+                SelectedMatchSettings.Difficulty = Difficulty.Insane;
                 break;
 
-            case EnemyDifficulty.VeryHard:
-                SelectedMatchSettings.EnemyDifficulty = EnemyDifficulty.Insane;
-                break;
-
-            case EnemyDifficulty.Insane:
-                SelectedMatchSettings.EnemyDifficulty = EnemyDifficulty.Easy;
+            case Difficulty.Insane:
+                SelectedMatchSettings.Difficulty = Difficulty.Easy;
                 break;
         }
 
-        UpdateEnemyDifficultyText();
+        UpdateDifficultyButtonVisual();
     }
 
     public void OnScoreButtonPressed()
@@ -250,7 +250,7 @@ public class UIManager : MonoBehaviour
             SelectedMatchSettings.TargetScore = 5;
         }
 
-        UpdateScoreText();
+        UpdateScoreButtonVisual();
     }
 
     public void OnTimeButtonPressed()
@@ -282,84 +282,134 @@ public class UIManager : MonoBehaviour
             SelectedMatchSettings.MatchDurationSeconds = 300f;
         }
 
-        UpdateTimeText();
+        UpdateTimeButtonVisual();
     }
 
-    private void UpdateEnemyDifficultyText()
+    private void UpdateDifficultyButtonVisual()
     {
-        EnemyDifficultyText.text = "Enemy Difficulty: " + GetFormattedEnemyDifficultyText();
+        int DifficultyVisualIndex = GetDifficultyVisualIndex();
+
+        DifficultyButtonView.ApplyVisual(DifficultyVisualIndex);
     }
 
-    private string GetFormattedEnemyDifficultyText()
+    private int GetDifficultyVisualIndex()
     {
-        switch (SelectedMatchSettings.EnemyDifficulty)
+        if (SelectedMatchSettings.Difficulty == Difficulty.Easy)
         {
-            case EnemyDifficulty.Easy:
-                return "Easy";
-
-            case EnemyDifficulty.Medium:
-                return "Medium";
-
-            case EnemyDifficulty.Hard:
-                return "Hard";
-
-            case EnemyDifficulty.VeryHard:
-                return "Very Hard";
-
-            case EnemyDifficulty.Insane:
-                return "Insane";
+            return 0;
         }
 
-        return "Unknown";
+        if (SelectedMatchSettings.Difficulty == Difficulty.Normal)
+        {
+            return 1;
+        }
+
+        if (SelectedMatchSettings.Difficulty == Difficulty.Hard)
+        {
+            return 2;
+        }
+
+        if (SelectedMatchSettings.Difficulty == Difficulty.Insane)
+        {
+            return 3;
+        }
+
+        return 0;
     }
 
-    private void UpdateScoreText()
+    private void UpdateScoreButtonVisual()
+    {
+        int ScoreVisualIndex = GetScoreVisualIndex();
+
+        ScoreButtonView.ApplyVisual(ScoreVisualIndex);
+    }
+
+    private int GetScoreVisualIndex()
     {
         if (SelectedMatchSettings.TargetScore == 0)
         {
-            ScoreText.text = "Score: No Limit";
+            return 0;
         }
 
-        else
+        if (SelectedMatchSettings.TargetScore == 5)
         {
-            ScoreText.text = "Score: " + SelectedMatchSettings.TargetScore.ToString();
+            return 1;
         }
+
+        if (SelectedMatchSettings.TargetScore == 10)
+        {
+            return 2;
+        }
+
+        if (SelectedMatchSettings.TargetScore == 15)
+        {
+            return 3;
+        }
+
+        if (SelectedMatchSettings.TargetScore == 20)
+        {
+            return 4;
+        }
+
+        return 0;
     }
 
-    private void UpdateTimeText()
-    {
-        if (SelectedMatchSettings.MatchDurationSeconds == 0f)
-        {
-            TimeText.text = "Time: No Limit";
-        }
-
-        else
-        {
-            int Minutes = (int)(SelectedMatchSettings.MatchDurationSeconds / 60f);
-
-            TimeText.text = "Time: " + Minutes.ToString() + " Min";
-        }
-    }
-
-    private void UpdateEnemyDifficultyAvailability()
+    private void UpdateDifficultyAvailability()
     {
         if (SelectedMatchSettings.GameMode == GameMode.Multiplayer)
         {
-            EnemyDifficultyButton.interactable = false;
+            DifficultyButton.interactable = false;
+            DifficultyButtonView.SetVisualEnabled(false);
 
-            EnemyDifficultyText.text = "Enemy Difficulty: Disabled In Multiplayer";
-
-            EnemyDifficultyInfoText.gameObject.SetActive(true);
-            EnemyDifficultyInfoText.text = "Trying to set your rival's difficulty?";
+            DifficultyInfoText.gameObject.SetActive(true);
+            DifficultyInfoText.text = "Trying to set your rival's difficulty?";
         }
 
         else
         {
-            EnemyDifficultyButton.interactable = true;
+            DifficultyButton.interactable = true;
+            DifficultyButtonView.SetVisualEnabled(true);
 
-            EnemyDifficultyInfoText.gameObject.SetActive(false);
+            DifficultyInfoText.gameObject.SetActive(false);
 
-            UpdateEnemyDifficultyText();
+            UpdateDifficultyButtonVisual();
         }
+    }
+
+    private void UpdateTimeButtonVisual()
+    {
+        int TimeVisualIndex = GetTimeVisualIndex();
+
+        TimeButtonView.ApplyVisual(TimeVisualIndex);
+    }
+
+    private int GetTimeVisualIndex()
+    {
+        if (SelectedMatchSettings.MatchDurationSeconds == 0f)
+        {
+            return 0;
+        }
+
+        if (SelectedMatchSettings.MatchDurationSeconds == 300f)
+        {
+            return 1;
+        }
+
+        if (SelectedMatchSettings.MatchDurationSeconds == 600f)
+        {
+            return 2;
+        }
+
+        if (SelectedMatchSettings.MatchDurationSeconds == 900f)
+        {
+            return 3;
+        }
+
+        if (SelectedMatchSettings.MatchDurationSeconds == 1200f)
+        {
+            return 4;
+        }
+
+        return 0;
     }
 }

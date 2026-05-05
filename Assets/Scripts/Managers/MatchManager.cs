@@ -40,7 +40,7 @@ public class MatchManager : MonoBehaviour
     [SerializeField] private int Player2Score;
     [SerializeField] private int TargetScore;
     [SerializeField] private float RemainingTime;
-    [SerializeField] private EnemyDifficulty SelectedEnemyDifficulty;
+    [SerializeField] private Difficulty SelectedEnemyDifficulty;
 
     [Header("Match State")]
     [SerializeField] private bool IsMatchFinished;
@@ -339,7 +339,7 @@ public class MatchManager : MonoBehaviour
 
         TargetScore = SelectedMatchSettings.TargetScore;
         RemainingTime = SelectedMatchSettings.MatchDurationSeconds;
-        SelectedEnemyDifficulty = SelectedMatchSettings.EnemyDifficulty;
+        SelectedEnemyDifficulty = SelectedMatchSettings.Difficulty;
     }
 
     private void UpdateScoreTexts()
@@ -389,21 +389,18 @@ public class MatchManager : MonoBehaviour
 
     private string GetFormattedEnemyDifficultyText()
     {
-        switch (SelectedMatchSettings.EnemyDifficulty)
+        switch (SelectedMatchSettings.Difficulty)
         {
-            case EnemyDifficulty.Easy:
+            case Difficulty.Easy:
                 return "Easy";
 
-            case EnemyDifficulty.Medium:
-                return "Medium";
+            case Difficulty.Normal:
+                return "Normal";
 
-            case EnemyDifficulty.Hard:
+            case Difficulty.Hard:
                 return "Hard";
 
-            case EnemyDifficulty.VeryHard:
-                return "Very Hard";
-
-            case EnemyDifficulty.Insane:
+            case Difficulty.Insane:
                 return "Insane";
         }
 

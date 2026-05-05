@@ -3,37 +3,36 @@ using UnityEngine;
 
 public class BallController : MonoBehaviour
 {
+    #region Variables
     [Header("Ball Settings")]
     [SerializeField] private float BallSpeed = 4f;
-    [SerializeField] private Vector2 MoveDirection;
 
     [Header("Reset Settings")]
     [SerializeField] private float RestartDelay = 1f;
     [SerializeField] private Vector3 StartPosition;
-    [SerializeField] private bool IsMatchFinished;
-    
+
     [Header("Clamp Settings")]
     [SerializeField] private bool UseHorizontalClamp = true;
     [SerializeField] private float MinX = -3.5f;
     [SerializeField] private float MaxX = 3.5f;
     [SerializeField] private float GizmoHeight = 12f;
 
+    [Header("Runtime State")]
+    [SerializeField] private Vector2 MoveDirection;
     [SerializeField] private MatchSide LastHitSide = MatchSide.None;
+    [SerializeField] private bool IsMatchFinished;
+    #endregion
 
-    private void OnEnable()
-    {
-        MatchManager.OnMatchEnded += HandleMatchEnded;
-    }
-
-    private void OnDisable()
-    {
-        MatchManager.OnMatchEnded -= HandleMatchEnded;
-    }
-
+    #region Unity Methods
     private void Awake()
     {
         StartPosition = transform.position;
         IsMatchFinished = false;
+    }
+
+    private void OnEnable()
+    {
+        MatchManager.OnMatchEnded += HandleMatchEnded;
     }
 
     private void Start()
@@ -46,11 +45,46 @@ public class BallController : MonoBehaviour
         Move();
     }
 
+    private void OnDisable()
+    {
+        MatchManager.OnMatchEnded -= HandleMatchEnded;
+    }
+    #endregion
+
+    #region Round Control
+    public MatchSide GetLastHitSide()
+    {
+        return LastHitSide;
+    }
+
+    public void StopBallForRound()
+    {
+        if (IsMatchFinished == true) return;
+
+        StopBallMovement();
+    }
+
+    public void ResetBallForRound()
+    {
+        if (IsMatchFinished == true) return;
+
+        StopBallMovement();
+
+        transform.position = StartPosition;
+        LastHitSide = MatchSide.None;
+    }
+
+    public void LaunchBall()
+    {
+        if (IsMatchFinished == true) return;
+
+        SetRandomStartDirection();
+    }
+
     private void HandleMatchEnded()
     {
         IsMatchFinished = true;
-        StopAllCoroutines();
-        MoveDirection = Vector2.zero;
+        StopBallMovement();
     }
 
     private IEnumerator StartBallRoutine()
@@ -62,30 +96,23 @@ public class BallController : MonoBehaviour
         SetRandomStartDirection();
     }
 
-    public void StopBallForRound()
+    private void StopBallMovement()
     {
-        if (IsMatchFinished) return;
-        
         StopAllCoroutines();
         MoveDirection = Vector2.zero;
     }
+    #endregion
 
-    public void ResetBallForRound()
+    #region Movement
+    private void Move()
     {
-        if (IsMatchFinished) return;
-        
-        StopAllCoroutines();
+        float MovementAmount = BallSpeed * Time.deltaTime;
 
-        MoveDirection = Vector2.zero;
-        transform.position = StartPosition;
-        LastHitSide = MatchSide.None;
-    }
+        Vector3 Movement = (Vector3)(MoveDirection * MovementAmount);
 
-    public void LaunchBall()
-    {
-        if (IsMatchFinished) return;
-        
-        SetRandomStartDirection();
+        transform.position = transform.position + Movement;
+
+        ClampBallPosition();
     }
 
     private void SetRandomStartDirection()
@@ -94,28 +121,18 @@ public class BallController : MonoBehaviour
 
         if (RandomDirection < 0.5f)
         {
-            MoveDirection = Vector2.up.normalized;
+            MoveDirection = Vector2.up;
         }
+
         else
         {
-            MoveDirection = Vector2.down.normalized;
+            MoveDirection = Vector2.down;
         }
-    }
-
-    private void Move()
-    {
-        Vector3 Movement = (Vector3)(MoveDirection * BallSpeed * Time.deltaTime);
-        transform.position += Movement;
-
-        ClampBallPosition();
     }
 
     private void ClampBallPosition()
     {
-        if (UseHorizontalClamp == false)
-        {
-            return;
-        }
+        if (UseHorizontalClamp == false) return;   
 
         Vector3 CurrentPosition = transform.position;
 
@@ -126,63 +143,76 @@ public class BallController : MonoBehaviour
 
             if (MoveDirection.x < 0f)
             {
-                MoveDirection = new Vector2(-MoveDirection.x, MoveDirection.y).normalized;
+                BounceHorizontally();
             }
+
+            return;
         }
 
-        else if (CurrentPosition.x > MaxX)
+        if (CurrentPosition.x > MaxX)
         {
             CurrentPosition.x = MaxX;
             transform.position = CurrentPosition;
 
             if (MoveDirection.x > 0f)
             {
-                MoveDirection = new Vector2(-MoveDirection.x, MoveDirection.y).normalized;
+                BounceHorizontally();
             }
         }
     }
 
-    public MatchSide GetLastHitSide()
+    private void BounceHorizontally()
     {
-        return LastHitSide;
+        MoveDirection = new Vector2(-MoveDirection.x, MoveDirection.y).normalized;
+    }
+    #endregion
+
+    #region Collision
+    private void OnCollisionEnter2D(Collision2D Collision)
+    {
+        if (HandleRacketCollision(Collision) == true) return;
+
+        if (HandleWallCollision(Collision) == true) return;
     }
 
-    private void OnCollisionEnter2D(Collision2D Collision)
+    private bool HandleRacketCollision(Collision2D Collision)
     {
         RacketSideIdentifier RacketSideIdentifier = Collision.gameObject.GetComponent<RacketSideIdentifier>();
 
-        if (RacketSideIdentifier != null)
+        if (RacketSideIdentifier == null) return false;
+        
+        float HitOffset = transform.position.x - Collision.transform.position.x;
+        MatchSide RacketSide = RacketSideIdentifier.GetRacketSide();
+        
+        LastHitSide = RacketSide;
+
+        if (RacketSide == MatchSide.Player1)
         {
-            float HitOffset = transform.position.x - Collision.transform.position.x;
-            MatchSide RacketSide = RacketSideIdentifier.GetRacketSide();
-            LastHitSide = RacketSide;
-
-            if (RacketSide == MatchSide.Player1)
-            {
-                Vector2 NewDirection = new Vector2(HitOffset, 1f).normalized;
-                MoveDirection = NewDirection;
-            }
-            else if (RacketSide == MatchSide.Player2)
-            {
-                Vector2 NewDirection = new Vector2(HitOffset, -1f).normalized;
-                MoveDirection = NewDirection;
-            }
-
-            return;
+            MoveDirection = new Vector2(HitOffset, 1f).normalized;
         }
 
-        if (Collision.gameObject.CompareTag("Wall"))
+        else if (RacketSide == MatchSide.Player2)
         {
-            MoveDirection = new Vector2(-MoveDirection.x, MoveDirection.y).normalized;
+            MoveDirection = new Vector2(HitOffset, -1f).normalized;
         }
+
+        return true;
     }
 
+    private bool HandleWallCollision(Collision2D Collision)
+    {
+        if (Collision.gameObject.CompareTag("Wall") == false) return false;
+        
+        BounceHorizontally();
+
+        return true;
+    }
+    #endregion
+
+    #region Gizmos
     private void OnDrawGizmosSelected()
     {
-        if (UseHorizontalClamp == false)
-        {
-            return;
-        }
+        if (UseHorizontalClamp == false) return;
 
         Gizmos.color = Color.yellow;
 
@@ -195,4 +225,5 @@ public class BallController : MonoBehaviour
         Gizmos.DrawLine(LeftTop, LeftBottom);
         Gizmos.DrawLine(RightTop, RightBottom);
     }
+    #endregion
 }

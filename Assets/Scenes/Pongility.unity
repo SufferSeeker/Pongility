@@ -748,8 +748,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -60, y: 100}
-  m_SizeDelta: {x: 320, y: 50}
+  m_AnchoredPosition: {x: 9, y: 100}
+  m_SizeDelta: {x: 458, y: 50}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &312306115
 MonoBehaviour:
@@ -2986,8 +2986,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -60, y: 100}
-  m_SizeDelta: {x: 320, y: 50}
+  m_AnchoredPosition: {x: 9, y: 100}
+  m_SizeDelta: {x: 458, y: 50}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1152105395
 MonoBehaviour:
@@ -3750,6 +3750,7 @@ MonoBehaviour:
   RacketBehind: {fileID: 6931090616929904503}
   RacketLeft: {fileID: 6931090616929904506}
   RacketRight: {fileID: 6931090616929904505}
+  CanUseAbilities: 1
 --- !u!114 &1338970958
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4325,9 +4326,16 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   SelectedMatchSettings: {fileID: 0}
+  PlayerRacket1: {fileID: 0}
   PlayerRacket2: {fileID: 0}
+  Player1ManualController: {fileID: 0}
   Player2ManualController: {fileID: 0}
   Player2AIController: {fileID: 0}
+  BallController: {fileID: 0}
+  Player1DamageableTarget: {fileID: 0}
+  Player2DamageableTarget: {fileID: 0}
+  Player1AbilityInventory: {fileID: 0}
+  Player2AbilityInventory: {fileID: 0}
   MatchResultPanel: {fileID: 0}
   Player1ResultText: {fileID: 0}
   Player2ResultText: {fileID: 0}
@@ -4342,8 +4350,10 @@ MonoBehaviour:
   RemainingTime: 0
   SelectedEnemyDifficulty: 0
   IsMatchFinished: 0
+  IsRoundResetting: 0
   ElapsedMatchTime: 0
   MatchEndDelay: 1
+  RoundResetDelay: 2
 --- !u!4 &1427547274
 Transform:
   m_ObjectHideFlags: 0
@@ -5273,6 +5283,7 @@ MonoBehaviour:
   RacketBehind: {fileID: 2015166244368997401}
   RacketLeft: {fileID: 1038224472}
   RacketRight: {fileID: 961195873}
+  CanUseAbilities: 1
 --- !u!114 &1779257999
 MonoBehaviour:
   m_ObjectHideFlags: 0

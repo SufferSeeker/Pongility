@@ -3,10 +3,14 @@ using UnityEngine.SceneManagement;
 
 public class GameManager : MonoBehaviour
 {
+    #region Variables
     public static GameManager Instance { get; private set; }
-    
-    [SerializeField] private SelectedMatchSettings SelectedMatchSettings;
 
+    [Header("References")]
+    [SerializeField] private SelectedMatchSettings SelectedMatchSettings;
+    #endregion
+
+    #region Unity Methods
     private void Awake()
     {
         if (Instance != null && Instance != this)
@@ -20,18 +24,19 @@ public class GameManager : MonoBehaviour
 
         SelectedMatchSettings = FindObjectOfType<SelectedMatchSettings>();
     }
+    #endregion
 
+    #region Scene Management
     public void StartGame()
     {
-        switch (SelectedMatchSettings.GameType)
+        if (SelectedMatchSettings.GameType == GameType.Classic)
         {
-            case GameType.Classic:
-                SceneManager.LoadScene("Classic");
-                break;
+            SceneManager.LoadScene("Classic");
+        }
 
-            case GameType.Pongility:
-                SceneManager.LoadScene("Pongility");
-                break;
+        else if (SelectedMatchSettings.GameType == GameType.Pongility)
+        {
+            SceneManager.LoadScene("Pongility");
         }
     }
 
@@ -44,4 +49,5 @@ public class GameManager : MonoBehaviour
     {
         SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
     }
+    #endregion
 }
