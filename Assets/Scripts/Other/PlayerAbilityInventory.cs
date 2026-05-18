@@ -163,7 +163,7 @@ public class PlayerAbilityInventory : MonoBehaviour
 
         if (Fireball != null)
         {
-            Fireball.Initialize(GetAbilityDirection(), PlayerSide);
+            Fireball.Initialize(GetAbilityDirection(), PlayerSide, SpawnPoint);
         }
     }
 

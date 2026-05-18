@@ -1790,6 +1790,18 @@ PrefabInstance:
       propertyPath: m_Name
       value: Ability Fireball
       objectReference: {fileID: 0}
+    - target: {fileID: 4662674777359668740, guid: 7f326740dd3c6c34484098aa0891651c, type: 3}
+      propertyPath: m_Size.x
+      value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: 4662674777359668740, guid: 7f326740dd3c6c34484098aa0891651c, type: 3}
+      propertyPath: m_Sprite
+      value: 
+      objectReference: {fileID: 21300000, guid: 1630133fe29bd3d458789805d985c9fa, type: 3}
+    - target: {fileID: 4662674777359668740, guid: 7f326740dd3c6c34484098aa0891651c, type: 3}
+      propertyPath: m_WasSpriteAssigned
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 9157861817545847908, guid: 7f326740dd3c6c34484098aa0891651c, type: 3}
       propertyPath: m_LocalPosition.x
       value: 3.31

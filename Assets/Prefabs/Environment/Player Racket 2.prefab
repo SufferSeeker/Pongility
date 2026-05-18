@@ -231,7 +231,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   TargetSide: 2
-  MaxHealth: 40
+  MaxHealth: 100
   CurrentHealth: 0
   IsDead: 0
 --- !u!1 &2121459988588404913
