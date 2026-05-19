@@ -4,7 +4,8 @@ using UnityEngine.UI;
 
 public class UIManager : MonoBehaviour
 {
-    [Header("References")]
+    #region Variables
+    [Header("Panel References")]
     [SerializeField] private GameObject MainMenuPanel;
     [SerializeField] private GameObject TrophiesPanel;
     [SerializeField] private GameObject OptionsPanel;
@@ -12,192 +13,168 @@ public class UIManager : MonoBehaviour
     [SerializeField] private GameObject ModeSelectionPanel;
     [SerializeField] private GameObject GameSelectionPanel;
     [SerializeField] private GameObject MatchSettingsPanel;
-    [SerializeField] private SelectedMatchSettings SelectedMatchSettings;
 
     [Header("Match Settings References")]
+    [SerializeField] private SelectedMatchSettings SelectedMatchSettings;
     [SerializeField] private Button DifficultyButton;
     [SerializeField] private TextMeshProUGUI DifficultyInfoText;
     [SerializeField] private MatchSettingButtonView TimeButtonView;
     [SerializeField] private MatchSettingButtonView ScoreButtonView;
     [SerializeField] private MatchSettingButtonView DifficultyButtonView;
+    #endregion
 
+    #region Unity Methods
     private void Awake()
     {
-        MainMenuPanel = GameObject.Find("Main Menu Panel");
-        TrophiesPanel = GameObject.Find("Trophies Panel");
-        OptionsPanel = GameObject.Find("Options Panel");
-        ExtrasPanel = GameObject.Find("Extras Panel");
-        ModeSelectionPanel = GameObject.Find("Mode Selection Panel");
-        GameSelectionPanel = GameObject.Find("Game Selection Panel");
-        MatchSettingsPanel = GameObject.Find("Match Settings Panel");
-        
-        DifficultyButton = GameObject.Find("Difficulty Button").GetComponent<Button>();
-        DifficultyInfoText = GameObject.Find("Difficulty Info Text").GetComponent<TextMeshProUGUI>();
-
-        TimeButtonView = GameObject.Find("Time Button").GetComponent<MatchSettingButtonView>();
-        ScoreButtonView = GameObject.Find("Score Button").GetComponent<MatchSettingButtonView>();
-        DifficultyButtonView = GameObject.Find("Difficulty Button").GetComponent<MatchSettingButtonView>();
+        FindPanelReferences();
+        FindMatchSettingsReferences();
     }
 
-    void Start()
+    private void Start()
     {
-        if (MainMenuPanel) MainMenuPanel.SetActive(true);
-        if (TrophiesPanel) TrophiesPanel.SetActive(false);
-        if (OptionsPanel) OptionsPanel.SetActive(false);
-        if (ExtrasPanel) ExtrasPanel.SetActive(false);
-        if (ModeSelectionPanel) ModeSelectionPanel.SetActive(false);
-        if (GameSelectionPanel) GameSelectionPanel.SetActive(false);
-        if (MatchSettingsPanel) MatchSettingsPanel.SetActive(false);
+        SelectedMatchSettings = FindFirstObjectByType<SelectedMatchSettings>();
 
-        SelectedMatchSettings = FindObjectOfType<SelectedMatchSettings>();
+        ShowPanel(MainMenuPanel);
 
         UpdateDifficultyButtonVisual();
         UpdateDifficultyAvailability();
         UpdateScoreButtonVisual();
         UpdateTimeButtonVisual();
     }
+    #endregion
 
+    #region Main Menu Buttons
     public void OnPlayButtonPressed()
     {
-        Debug.Log("Play button'a basýldý.");
+        Debug.Log("Play button pressed.");
 
-        MainMenuPanel.SetActive(false);
-        ModeSelectionPanel.SetActive(true);
+        ShowPanel(ModeSelectionPanel);
     }
 
     public void OnAchievementsButtonPressed()
     {
-        Debug.Log("Achievements button'a basýldý.");
+        Debug.Log("Achievements button pressed.");
 
-        MainMenuPanel.SetActive(false);
-        TrophiesPanel.SetActive(true);
+        ShowPanel(TrophiesPanel);
     }
 
     public void OnOptionsButtonPressed()
     {
-        Debug.Log("Options button'a basýldý.");
+        Debug.Log("Options button pressed.");
 
-        MainMenuPanel.SetActive(false);
-        OptionsPanel.SetActive(true);
+        ShowPanel(OptionsPanel);
     }
 
     public void OnExtrasButtonPressed()
     {
-        Debug.Log("Extras button'a basýldý.");
+        Debug.Log("Extras button pressed.");
 
-        MainMenuPanel.SetActive(false);
-        ExtrasPanel.SetActive(true);
+        ShowPanel(ExtrasPanel);
     }
 
     public void OnQuitButtonPressed()
     {
         Application.Quit();
     }
+    #endregion
 
+    #region Back Buttons
+    public void OnBackFromAchievementsPressed()
+    {
+        Debug.Log("Achievements back button pressed.");
+
+        ShowPanel(MainMenuPanel);
+    }
+
+    public void OnBackFromOptionsPressed()
+    {
+        Debug.Log("Options back button pressed.");
+
+        ShowPanel(MainMenuPanel);
+    }
+
+    public void OnBackFromExtrasPressed()
+    {
+        Debug.Log("Extras back button pressed.");
+
+        ShowPanel(MainMenuPanel);
+    }
+
+    public void OnBackFromModeSelectionPressed()
+    {
+        Debug.Log("Mode Selection back button pressed.");
+
+        ShowPanel(MainMenuPanel);
+    }
+
+    public void OnBackFromGameSelectionPressed()
+    {
+        Debug.Log("Game Selection back button pressed.");
+
+        ShowPanel(ModeSelectionPanel);
+    }
+
+    public void OnBackFromMatchSettingsPressed()
+    {
+        Debug.Log("Match Settings back button pressed.");
+
+        ShowPanel(GameSelectionPanel);
+    }
+    #endregion
+
+    #region Match Selection Buttons
     public void OnSingleplayerButtonPressed()
     {
-        Debug.Log("Singleplayer button'a basýldý.");
+        Debug.Log("Singleplayer button pressed.");
 
         SelectedMatchSettings.GameMode = GameMode.Singleplayer;
 
         UpdateDifficultyAvailability();
 
-        ModeSelectionPanel.SetActive(false);
-        GameSelectionPanel.SetActive(true);
+        ShowPanel(GameSelectionPanel);
     }
 
     public void OnMultiplayerButtonPressed()
     {
-        Debug.Log("Multiplayer button'a basýldý.");
+        Debug.Log("Multiplayer button pressed.");
 
         SelectedMatchSettings.GameMode = GameMode.Multiplayer;
 
         UpdateDifficultyAvailability();
 
-        ModeSelectionPanel.SetActive(false);
-        GameSelectionPanel.SetActive(true);
+        ShowPanel(GameSelectionPanel);
     }
 
     public void OnPongilityButtonPressed()
     {
-        Debug.Log("Pongility button'a basýldý.");
+        Debug.Log("Pongility button pressed.");
 
         SelectedMatchSettings.GameType = GameType.Pongility;
 
-        GameSelectionPanel.SetActive(false);
-        MatchSettingsPanel.SetActive(true);
+        ShowPanel(MatchSettingsPanel);
     }
 
     public void OnClassicButtonPressed()
     {
-        Debug.Log("Classic button'a basýldý.");
+        Debug.Log("Classic button pressed.");
 
         SelectedMatchSettings.GameType = GameType.Classic;
 
-        GameSelectionPanel.SetActive(false);
-        MatchSettingsPanel.SetActive(true);
+        ShowPanel(MatchSettingsPanel);
     }
 
     public void OnStartButtonPressed()
     {
-        Debug.Log("Start button'a basýldý.");
-
-        MatchSettingsPanel.SetActive(false);
+        Debug.Log("Start button pressed.");
 
         GameManager.Instance.StartGame();
     }
+    #endregion
 
-    public void OnBackFromAchievementsPressed()
-    {
-        Debug.Log("Achievements back button'a basýldý.");
-
-        TrophiesPanel.SetActive(false);
-        MainMenuPanel.SetActive(true);
-    }
-
-    public void OnBackFromOptionsPressed()
-    {
-        Debug.Log("Options back button'a basýldý.");
-
-        OptionsPanel.SetActive(false);
-        MainMenuPanel.SetActive(true);
-    }
-
-    public void OnBackFromExtrasPressed()
-    {
-        Debug.Log("Extras back button'a basýldý.");
-
-        ExtrasPanel.SetActive(false);
-        MainMenuPanel.SetActive(true);
-    }
-
-    public void OnBackFromModeSelectionPressed()
-    {
-        Debug.Log("Mode Selection back button'a basýldý.");
-
-        ModeSelectionPanel.SetActive(false);
-        MainMenuPanel.SetActive(true);
-    }
-
-    public void OnBackFromGameSelectionPressed()
-    {
-        Debug.Log("Game Selection back button'a basýldý.");
-
-        GameSelectionPanel.SetActive(false);
-        ModeSelectionPanel.SetActive(true);
-    }
-
-    public void OnBackFromMatchSettingsPressed()
-    {
-        Debug.Log("Match Settings back button'a basýldý.");
-
-        MatchSettingsPanel.SetActive(false);
-        GameSelectionPanel.SetActive(true);
-    }
-
+    #region Match Setting Buttons
     public void OnDifficultyButtonPressed()
     {
-        Debug.Log("Difficulty button'a basýldý.");
+        Debug.Log("Difficulty button pressed.");
 
         switch (SelectedMatchSettings.Difficulty)
         {
@@ -223,7 +200,7 @@ public class UIManager : MonoBehaviour
 
     public void OnScoreButtonPressed()
     {
-        Debug.Log("Score button'a basýldý.");
+        Debug.Log("Score button pressed.");
 
         if (SelectedMatchSettings.TargetScore == 5)
         {
@@ -255,7 +232,7 @@ public class UIManager : MonoBehaviour
 
     public void OnTimeButtonPressed()
     {
-        Debug.Log("Time button'a basýldý.");
+        Debug.Log("Time button pressed.");
 
         if (SelectedMatchSettings.MatchDurationSeconds == 300f)
         {
@@ -284,7 +261,9 @@ public class UIManager : MonoBehaviour
 
         UpdateTimeButtonVisual();
     }
+    #endregion
 
+    #region Visual Updates
     private void UpdateDifficultyButtonVisual()
     {
         int DifficultyVisualIndex = GetDifficultyVisualIndex();
@@ -354,28 +333,6 @@ public class UIManager : MonoBehaviour
         return 0;
     }
 
-    private void UpdateDifficultyAvailability()
-    {
-        if (SelectedMatchSettings.GameMode == GameMode.Multiplayer)
-        {
-            DifficultyButton.interactable = false;
-            DifficultyButtonView.SetVisualEnabled(false);
-
-            DifficultyInfoText.gameObject.SetActive(true);
-            DifficultyInfoText.text = "Trying to set your rival's difficulty?";
-        }
-
-        else
-        {
-            DifficultyButton.interactable = true;
-            DifficultyButtonView.SetVisualEnabled(true);
-
-            DifficultyInfoText.gameObject.SetActive(false);
-
-            UpdateDifficultyButtonVisual();
-        }
-    }
-
     private void UpdateTimeButtonVisual()
     {
         int TimeVisualIndex = GetTimeVisualIndex();
@@ -412,4 +369,66 @@ public class UIManager : MonoBehaviour
 
         return 0;
     }
+
+    private void UpdateDifficultyAvailability()
+    {
+        if (SelectedMatchSettings.GameMode == GameMode.Multiplayer)
+        {
+            DifficultyButton.interactable = false;
+            DifficultyButtonView.SetVisualEnabled(false);
+
+            DifficultyInfoText.gameObject.SetActive(true);
+            DifficultyInfoText.text = "Trying to set your rival's difficulty?";
+        }
+
+        else
+        {
+            DifficultyButton.interactable = true;
+            DifficultyButtonView.SetVisualEnabled(true);
+
+            DifficultyInfoText.gameObject.SetActive(false);
+
+            UpdateDifficultyButtonVisual();
+        }
+    }
+    #endregion
+
+    #region Helper Methods
+    private void FindPanelReferences()
+    {
+        MainMenuPanel = GameObject.Find("Main Menu Panel");
+        TrophiesPanel = GameObject.Find("Trophies Panel");
+        OptionsPanel = GameObject.Find("Options Panel");
+        ExtrasPanel = GameObject.Find("Extras Panel");
+        ModeSelectionPanel = GameObject.Find("Mode Selection Panel");
+        GameSelectionPanel = GameObject.Find("Game Selection Panel");
+        MatchSettingsPanel = GameObject.Find("Match Settings Panel");
+    }
+
+    private void FindMatchSettingsReferences()
+    {
+        GameObject DifficultyButtonObject = GameObject.Find("Difficulty Button");
+
+        DifficultyButton = DifficultyButtonObject.GetComponent<Button>();
+        DifficultyButtonView = DifficultyButtonObject.GetComponent<MatchSettingButtonView>();
+
+        DifficultyInfoText = GameObject.Find("Difficulty Info Text").GetComponent<TextMeshProUGUI>();
+
+        TimeButtonView = GameObject.Find("Time Button").GetComponent<MatchSettingButtonView>();
+        ScoreButtonView = GameObject.Find("Score Button").GetComponent<MatchSettingButtonView>();
+    }
+
+    private void ShowPanel(GameObject PanelToShow)
+    {
+        MainMenuPanel.SetActive(false);
+        TrophiesPanel.SetActive(false);
+        OptionsPanel.SetActive(false);
+        ExtrasPanel.SetActive(false);
+        ModeSelectionPanel.SetActive(false);
+        GameSelectionPanel.SetActive(false);
+        MatchSettingsPanel.SetActive(false);
+
+        PanelToShow.SetActive(true);
+    }
+    #endregion
 }

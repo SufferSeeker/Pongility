@@ -1272,7 +1272,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b816bd2c840330e46a407e054fac2e7a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  GoalOwner: 2
+  ScoringSide: 0
 --- !u!1 &916345166
 GameObject:
   m_ObjectHideFlags: 0
@@ -1963,7 +1963,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b816bd2c840330e46a407e054fac2e7a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  GoalOwner: 1
+  ScoringSide: 0
 --- !u!1 &1422439676
 GameObject:
   m_ObjectHideFlags: 0
@@ -2261,8 +2261,16 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   SelectedMatchSettings: {fileID: 0}
+  BallController: {fileID: 0}
+  PlayerRacket1: {fileID: 0}
   PlayerRacket2: {fileID: 0}
-  EnemyRacket: {fileID: 0}
+  Player1ManualController: {fileID: 0}
+  Player2ManualController: {fileID: 0}
+  Player2AIController: {fileID: 0}
+  Player1DamageableTarget: {fileID: 0}
+  Player2DamageableTarget: {fileID: 0}
+  Player1AbilityInventory: {fileID: 0}
+  Player2AbilityInventory: {fileID: 0}
   MatchResultPanel: {fileID: 0}
   Player1ResultText: {fileID: 0}
   Player2ResultText: {fileID: 0}
@@ -2277,8 +2285,10 @@ MonoBehaviour:
   RemainingTime: 0
   SelectedEnemyDifficulty: 0
   IsMatchFinished: 0
+  IsRoundResetting: 0
   ElapsedMatchTime: 0
   MatchEndDelay: 1
+  RoundResetDelay: 2
 --- !u!4 &1427547274
 Transform:
   m_ObjectHideFlags: 0
@@ -3318,63 +3328,6 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 44da86229f2e67c45abd471b395c8538, type: 3}
---- !u!1001 &6286574827500134566
-PrefabInstance:
-  m_ObjectHideFlags: 0
-  serializedVersion: 2
-  m_Modification:
-    serializedVersion: 3
-    m_TransformParent: {fileID: 0}
-    m_Modifications:
-    - target: {fileID: 804165919078298295, guid: 53e847e98ab557248816c2b63107465a, type: 3}
-      propertyPath: m_LocalPosition.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 804165919078298295, guid: 53e847e98ab557248816c2b63107465a, type: 3}
-      propertyPath: m_LocalPosition.y
-      value: 4
-      objectReference: {fileID: 0}
-    - target: {fileID: 804165919078298295, guid: 53e847e98ab557248816c2b63107465a, type: 3}
-      propertyPath: m_LocalPosition.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 804165919078298295, guid: 53e847e98ab557248816c2b63107465a, type: 3}
-      propertyPath: m_LocalRotation.w
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 804165919078298295, guid: 53e847e98ab557248816c2b63107465a, type: 3}
-      propertyPath: m_LocalRotation.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 804165919078298295, guid: 53e847e98ab557248816c2b63107465a, type: 3}
-      propertyPath: m_LocalRotation.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 804165919078298295, guid: 53e847e98ab557248816c2b63107465a, type: 3}
-      propertyPath: m_LocalRotation.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 804165919078298295, guid: 53e847e98ab557248816c2b63107465a, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 804165919078298295, guid: 53e847e98ab557248816c2b63107465a, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 804165919078298295, guid: 53e847e98ab557248816c2b63107465a, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 9101103344600055461, guid: 53e847e98ab557248816c2b63107465a, type: 3}
-      propertyPath: m_Name
-      value: Enemy Racket
-      objectReference: {fileID: 0}
-    m_RemovedComponents: []
-    m_RemovedGameObjects: []
-    m_AddedGameObjects: []
-    m_AddedComponents: []
-  m_SourcePrefab: {fileID: 100100000, guid: 53e847e98ab557248816c2b63107465a, type: 3}
 --- !u!1001 &6931090616929904502
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -3448,4 +3401,3 @@ SceneRoots:
   - {fileID: 3908558905377940800}
   - {fileID: 2015166244368997400}
   - {fileID: 6931090616929904502}
-  - {fileID: 6286574827500134566}

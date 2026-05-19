@@ -76,7 +76,7 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: -2043388047
   m_SortingLayer: 1
-  m_SortingOrder: 1
+  m_SortingOrder: 3
   m_Sprite: {fileID: 21300000, guid: 1630133fe29bd3d458789805d985c9fa, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
@@ -183,9 +183,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 292a1a8232ed3d944a4317a98ee16f2c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  FireballAnimator: {fileID: 0}
+  FireballCollider: {fileID: 0}
   CastTriggerName: Cast
   ForwardTriggerName: Forward
   ExplodeTriggerName: Explode
   MovementSpeed: 8
   MoveDirection: {x: 0, y: 0}
   DamageAmount: 20
+  OwnerSide: 0
+  CanMove: 0
+  HasImpacted: 0

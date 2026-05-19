@@ -29,6 +29,7 @@ public enum MatchSide
 
 public class SelectedMatchSettings : MonoBehaviour
 {
+    #region Variables
     [Header("Game Settings")]
     public GameMode GameMode = GameMode.Singleplayer;
     public GameType GameType = GameType.Classic;
@@ -37,4 +38,5 @@ public class SelectedMatchSettings : MonoBehaviour
     [Header("Match Rules")]
     public int TargetScore = 10;
     public float MatchDurationSeconds = 300f;
+    #endregion
 }

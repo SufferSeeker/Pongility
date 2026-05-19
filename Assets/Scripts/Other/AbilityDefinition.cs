@@ -30,9 +30,11 @@ public enum AbilitySpawnPointType
 [CreateAssetMenu(fileName = "New Ability", menuName = "Pongility/Ability Definition")]
 public class AbilityDefinition : ScriptableObject
 {
+    #region Variables
     [Header("General Information")]
     [SerializeField] private string AbilityName;
     [SerializeField] private Sprite AbilityIcon;
+
     [TextArea]
     [SerializeField] private string AbilityDescription;
 
@@ -40,15 +42,14 @@ public class AbilityDefinition : ScriptableObject
     [SerializeField] private AbilityTargetType TargetType;
     [SerializeField] private AbilityDeliveryType DeliveryType;
 
-    [Header("Projectile Settings")]
-    [SerializeField] private GameObject ProjectilePrefab;
-    
-    [Header("Casting Settings")]
-    [SerializeField] private float CastTime;
+    [Header("Prefab Settings")]
+    [SerializeField] private GameObject AbilityPrefab;
 
     [Header("Spawn Settings")]
     [SerializeField] private AbilitySpawnPointType SpawnPointType;
+    #endregion
 
+    #region Getters
     public string GetAbilityName()
     {
         return AbilityName;
@@ -74,18 +75,14 @@ public class AbilityDefinition : ScriptableObject
         return DeliveryType;
     }
 
-    public GameObject GetProjectilePrefab()
+    public GameObject GetAbilityPrefab()
     {
-        return ProjectilePrefab;
-    }
-
-    public float GetCastTime()
-    {
-        return CastTime;
+        return AbilityPrefab;
     }
 
     public AbilitySpawnPointType GetSpawnPointType()
     {
         return SpawnPointType;
     }
+    #endregion
 }

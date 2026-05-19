@@ -2,11 +2,22 @@ using UnityEngine;
 
 public class PauseManager : MonoBehaviour
 {
+    #region Variables
+    [Header("Panel References")]
     [SerializeField] private GameObject PausePanel;
 
+    [Header("State")]
     [SerializeField] private bool IsPaused;
     [SerializeField] private bool CanPause = true;
+    #endregion
 
+    #region Unity Methods
+    private void Awake()
+    {
+        PausePanel = GameObject.Find("Pause Panel");
+
+        PausePanel.SetActive(false);
+    }
 
     private void OnEnable()
     {
@@ -19,51 +30,62 @@ public class PauseManager : MonoBehaviour
         InputManager.OnPause -= HandlePause;
         MatchManager.OnMatchEnded -= HandleMatchEnded;
     }
+    #endregion
 
-    private void Awake()
-    {
-        PausePanel = GameObject.Find("Pause Panel");
-
-        PausePanel.SetActive(false);
-    }
-
+    #region Pause Logic
     private void HandlePause()
     {
         if (CanPause == false) return;
-        
-        if (!IsPaused)
+
+        if (IsPaused == false)
         {
-            PausePanel.SetActive(true);
-            Time.timeScale = 0;
-            IsPaused = true;
+            PauseGame();
         }
 
         else
         {
-            PausePanel.SetActive(false);
-            Time.timeScale = 1;
-            IsPaused = false;
+            ResumeGame();
         }
+    }
+
+    private void PauseGame()
+    {
+        PausePanel.SetActive(true);
+        Time.timeScale = 0f;
+        IsPaused = true;
+    }
+
+    private void ResumeGame()
+    {
+        PausePanel.SetActive(false);
+        Time.timeScale = 1f;
+        IsPaused = false;
     }
 
     private void HandleMatchEnded()
     {
         CanPause = false;
-    }
 
+        if (IsPaused == true)
+        {
+            ResumeGame();
+        }
+    }
+    #endregion
+
+    #region Button Methods
     public void OnMainMenuButtonPressed()
     {
-        IsPaused = false;
-        Time.timeScale = 1;
+        ResumeGame();
 
         GameManager.Instance.HandleMainMenuButtonPressed();
     }
 
     public void OnRestartButtonPressed()
     {
-        IsPaused = false;
-        Time.timeScale = 1;
+        ResumeGame();
 
         GameManager.Instance.HandleRestartButtonPressed();
     }
+    #endregion
 }

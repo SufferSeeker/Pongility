@@ -2,41 +2,28 @@ using UnityEngine;
 
 public class AbilityPickup : MonoBehaviour
 {
+    #region Variables
     [Header("Ability Settings")]
     [SerializeField] private AbilityDefinition AbilityDefinition;
 
     [Header("Player Inventories")]
     [SerializeField] private PlayerAbilityInventory Player1Inventory;
     [SerializeField] private PlayerAbilityInventory Player2Inventory;
+    #endregion
 
+    #region Unity Methods
     private void Awake()
     {
-        PlayerAbilityInventory[] Inventories = FindObjectsByType<PlayerAbilityInventory>(FindObjectsSortMode.None);
-
-        foreach (PlayerAbilityInventory Inventory in Inventories)
-        {
-            if (Inventory.GetPlayerSide() == MatchSide.Player1)
-            {
-                Player1Inventory = Inventory;
-            }
-
-            else if (Inventory.GetPlayerSide() == MatchSide.Player2)
-            {
-                Player2Inventory = Inventory;
-            }
-        }
+        FindPlayerInventories();
     }
 
     private void OnTriggerEnter2D(Collider2D Collision)
     {
-        BallController BallController = Collision.GetComponent<BallController>();
+        BallController Ball = Collision.GetComponent<BallController>();
 
-        if (BallController == null)
-        {
-            return;
-        }
-
-        MatchSide LastHitSide = BallController.GetLastHitSide();
+        if (Ball == null) return;
+        
+        MatchSide LastHitSide = Ball.GetLastHitSide();
 
         if (LastHitSide == MatchSide.None)
         {
@@ -46,17 +33,31 @@ public class AbilityPickup : MonoBehaviour
 
         PlayerAbilityInventory TargetInventory = GetTargetInventory(LastHitSide);
 
-        if (TargetInventory == null)
-        {
-            Debug.Log("No inventory found for " + LastHitSide);
-            return;
-        }
-
         bool AbilityAdded = TargetInventory.TryAddAbility(AbilityDefinition);
 
         if (AbilityAdded == true)
         {
             Destroy(gameObject);
+        }
+    }
+    #endregion
+
+    #region Inventory Setup
+    private void FindPlayerInventories()
+    {
+        PlayerAbilityInventory[] Inventories = FindObjectsByType<PlayerAbilityInventory>(FindObjectsSortMode.None);
+
+        for (int i = 0; i < Inventories.Length; i++)
+        {
+            if (Inventories[i].GetPlayerSide() == MatchSide.Player1)
+            {
+                Player1Inventory = Inventories[i];
+            }
+
+            else if (Inventories[i].GetPlayerSide() == MatchSide.Player2)
+            {
+                Player2Inventory = Inventories[i];
+            }
         }
     }
 
@@ -74,4 +75,5 @@ public class AbilityPickup : MonoBehaviour
 
         return null;
     }
+    #endregion
 }

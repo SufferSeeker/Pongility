@@ -3,8 +3,12 @@ using UnityEngine;
 
 public class DamageableTarget : MonoBehaviour
 {
+    #region Events
     public static event Action<MatchSide, MatchSide> OnTargetDied;
+    public event Action<int, int> OnHealthChanged;
+    #endregion
 
+    #region Variables
     [Header("Target Settings")]
     [SerializeField] private MatchSide TargetSide;
 
@@ -14,9 +18,9 @@ public class DamageableTarget : MonoBehaviour
 
     [Header("State")]
     [SerializeField] private bool IsDead;
+    #endregion
 
-    public event Action<int, int> OnHealthChanged;
-
+    #region Unity Methods
     private void Awake()
     {
         CurrentHealth = MaxHealth;
@@ -24,16 +28,20 @@ public class DamageableTarget : MonoBehaviour
 
         OnHealthChanged?.Invoke(CurrentHealth, MaxHealth);
     }
+    #endregion
 
+    #region Getters
     public MatchSide GetTargetSide()
     {
         return TargetSide;
     }
+    #endregion
 
+    #region Health Methods
     public void TakeDamage(int DamageAmount, MatchSide DamageOwnerSide)
     {
-        if (IsDead) return;
-        
+        if (IsDead == true) return;
+
         CurrentHealth -= DamageAmount;
 
         if (CurrentHealth < 0)
@@ -53,7 +61,7 @@ public class DamageableTarget : MonoBehaviour
 
     public void Heal(int HealAmount)
     {
-        if (IsDead) return;
+        if (IsDead == true) return;
 
         CurrentHealth += HealAmount;
 
@@ -76,10 +84,12 @@ public class DamageableTarget : MonoBehaviour
 
         Debug.Log(TargetSide + " health restored to full.");
     }
+    #endregion
 
+    #region Death Logic
     private void Die(MatchSide DamageOwnerSide)
     {
-        if (IsDead) return;
+        if (IsDead == true) return;
 
         IsDead = true;
 
@@ -87,4 +97,5 @@ public class DamageableTarget : MonoBehaviour
 
         OnTargetDied?.Invoke(TargetSide, DamageOwnerSide);
     }
+    #endregion
 }

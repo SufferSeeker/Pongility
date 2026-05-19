@@ -9,8 +9,10 @@ public class MatchSettingButtonSprites
     public Sprite PressedSprite;
 }
 
+
 public class MatchSettingButtonView : MonoBehaviour
 {
+    #region Variables
     [Header("References")]
     [SerializeField] private Button TargetButton;
     [SerializeField] private Image TargetImage;
@@ -20,7 +22,9 @@ public class MatchSettingButtonView : MonoBehaviour
 
     [Header("Current State")]
     [SerializeField] private int CurrentVisualIndex;
+    #endregion
 
+    #region Unity Methods
     private void Awake()
     {
         TargetButton = GetComponent<Button>();
@@ -31,7 +35,9 @@ public class MatchSettingButtonView : MonoBehaviour
     {
         ApplyVisual(CurrentVisualIndex);
     }
+    #endregion
 
+    #region Visual Methods
     public void ApplyVisual(int VisualIndex)
     {
         if (VisualIndex < 0)
@@ -80,4 +86,5 @@ public class MatchSettingButtonView : MonoBehaviour
 
         TargetButton.spriteState = NewSpriteState;
     }
+    #endregion
 }

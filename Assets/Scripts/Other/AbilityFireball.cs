@@ -2,6 +2,11 @@ using UnityEngine;
 
 public class AbilityFireball : MonoBehaviour
 {
+    #region Variables
+    [Header("References")]
+    [SerializeField] private Animator FireballAnimator;
+    [SerializeField] private Collider2D FireballCollider;
+
     [Header("Animation Settings")]
     [SerializeField] private string CastTriggerName = "Cast";
     [SerializeField] private string ForwardTriggerName = "Forward";
@@ -14,14 +19,13 @@ public class AbilityFireball : MonoBehaviour
     [Header("Damage Settings")]
     [SerializeField] private int DamageAmount = 20;
 
-    private MatchSide OwnerSide;
+    [Header("State")]
+    [SerializeField] private MatchSide OwnerSide;
+    [SerializeField] private bool CanMove;
+    [SerializeField] private bool HasImpacted;
+    #endregion
 
-    private Animator FireballAnimator;
-    private Collider2D FireballCollider;
-
-    private bool CanMove;
-    private bool HasImpacted;
-
+    #region Unity Methods
     private void Awake()
     {
         FireballAnimator = GetComponent<Animator>();
@@ -37,9 +41,24 @@ public class AbilityFireball : MonoBehaviour
     {
         if (CanMove == false) return;
 
-        transform.position += (Vector3)(MovementSpeed * Time.deltaTime * MoveDirection);
+        MoveFireball();
     }
 
+    private void OnTriggerEnter2D(Collider2D Collision)
+    {
+        if (HasImpacted == true) return;
+
+        DamageableTarget Target = Collision.GetComponent<DamageableTarget>();
+
+        if (CanDamageTarget(Target) == false) return;
+
+        Target.TakeDamage(DamageAmount, OwnerSide);
+
+        StartImpact();
+    }
+    #endregion
+
+    #region Initialization
     public void Initialize(Vector2 Direction, MatchSide NewOwnerSide, Transform CastParent)
     {
         MoveDirection = Direction.normalized;
@@ -55,17 +74,47 @@ public class AbilityFireball : MonoBehaviour
 
     private void SetFireballRotation()
     {
-        if (MoveDirection == Vector2.up)
+        if (MoveDirection.y > 0f)
         {
             transform.rotation = Quaternion.Euler(0f, 0f, 0f);
         }
 
-        else if (MoveDirection == Vector2.down)
+        else if (MoveDirection.y < 0f)
         {
             transform.rotation = Quaternion.Euler(0f, 0f, 180f);
         }
     }
+    #endregion
 
+    #region Movement
+    private void MoveFireball()
+    {
+        transform.position += (Vector3)(MovementSpeed * Time.deltaTime * MoveDirection);
+    }
+    #endregion
+
+    #region Impact
+    private bool CanDamageTarget(DamageableTarget Target)
+    {
+        if (Target == null) return false;
+
+        if (Target.GetTargetSide() == OwnerSide) return false;
+
+        return true;
+    }
+
+    private void StartImpact()
+    {
+        HasImpacted = true;
+        CanMove = false;
+
+        FireballCollider.enabled = false;
+
+        PlayAnimationTrigger(ExplodeTriggerName);
+    }
+    #endregion
+
+    #region Animation Event Methods
     public void StartForward()
     {
         if (HasImpacted == true) return;
@@ -79,38 +128,16 @@ public class AbilityFireball : MonoBehaviour
         CanMove = true;
     }
 
-    private void OnTriggerEnter2D(Collider2D Collision)
-    {
-        if (HasImpacted == true) return;
-
-        DamageableTarget Target = Collision.GetComponent<DamageableTarget>();
-
-        if (Target == null) return;
-
-        if (Target.GetTargetSide() == OwnerSide) return;
-
-        Target.TakeDamage(DamageAmount, OwnerSide);
-
-        StartImpact();
-    }
-
-    private void StartImpact()
-    {
-        HasImpacted = true;
-        CanMove = false;
-
-        FireballCollider.enabled = false;
-
-        PlayAnimationTrigger(ExplodeTriggerName);
-    }
-
     public void DestroyFireball()
     {
         Destroy(gameObject);
     }
+    #endregion
 
+    #region Helper Methods
     private void PlayAnimationTrigger(string TriggerName)
     {
         FireballAnimator.SetTrigger(TriggerName);
     }
+    #endregion
 }

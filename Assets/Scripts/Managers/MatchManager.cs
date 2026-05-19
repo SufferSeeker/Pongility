@@ -5,9 +5,12 @@ using UnityEngine;
 
 public class MatchManager : MonoBehaviour
 {
-    [Header("References")]
+    #region Variables
+    [Header("Core References")]
     [SerializeField] private SelectedMatchSettings SelectedMatchSettings;
+    [SerializeField] private BallController BallController;
 
+    [Header("Racket References")]
     [SerializeField] private GameObject PlayerRacket1;
     [SerializeField] private GameObject PlayerRacket2;
 
@@ -15,15 +18,15 @@ public class MatchManager : MonoBehaviour
     [SerializeField] private PlayerRacketController Player2ManualController;
     [SerializeField] private EnemyRacketController Player2AIController;
 
-    [SerializeField] private BallController BallController;
-
+    [Header("Health References")]
     [SerializeField] private DamageableTarget Player1DamageableTarget;
     [SerializeField] private DamageableTarget Player2DamageableTarget;
 
+    [Header("Ability References")]
     [SerializeField] private PlayerAbilityInventory Player1AbilityInventory;
     [SerializeField] private PlayerAbilityInventory Player2AbilityInventory;
 
-    [Header("UI")]
+    [Header("Result UI")]
     [SerializeField] private GameObject MatchResultPanel;
 
     [SerializeField] private TextMeshProUGUI Player1ResultText;
@@ -31,6 +34,7 @@ public class MatchManager : MonoBehaviour
     [SerializeField] private TextMeshProUGUI MatchDurationText;
     [SerializeField] private TextMeshProUGUI WinnerText;
 
+    [Header("Match UI")]
     [SerializeField] private TextMeshProUGUI Player1ScoreText;
     [SerializeField] private TextMeshProUGUI Player2ScoreText;
     [SerializeField] private TextMeshProUGUI TimeText;
@@ -46,11 +50,26 @@ public class MatchManager : MonoBehaviour
     [SerializeField] private bool IsMatchFinished;
     [SerializeField] private bool IsRoundResetting;
     [SerializeField] private float ElapsedMatchTime;
+
     public static Action OnMatchEnded;
 
     [Header("Other Settings")]
     [SerializeField] private float MatchEndDelay = 1f;
     [SerializeField] private float RoundResetDelay = 2f;
+    #endregion
+
+    #region Unity Methods
+    private void Awake()
+    {
+        FindCoreReferences();
+        FindRacketReferences();
+        FindHealthReferences();
+        FindAbilityInventories();
+        FindUIReferences();
+
+        MatchResultPanel.SetActive(false);
+        PlayerRacket2.SetActive(true);
+    }
 
     private void OnEnable()
     {
@@ -58,66 +77,36 @@ public class MatchManager : MonoBehaviour
         DamageableTarget.OnTargetDied += HandleTargetDied;
     }
 
-    private void OnDisable()
-    {
-        GoalZone.OnGoalScored -= HandleGoalScored;
-        DamageableTarget.OnTargetDied -= HandleTargetDied;
-    }
-
-    private void Awake()
-    {
-        SelectedMatchSettings = FindObjectOfType<SelectedMatchSettings>();
-
-        PlayerRacket1 = GameObject.Find("Player Racket 1");
-        PlayerRacket2 = GameObject.Find("Player Racket 2");
-
-        Player1ManualController = PlayerRacket1.GetComponent<PlayerRacketController>();
-        Player2ManualController = PlayerRacket2.GetComponent<PlayerRacketController>();
-        Player2AIController = PlayerRacket2.GetComponent<EnemyRacketController>();
-
-        BallController = GameObject.Find("Ball").GetComponent<BallController>();
-
-        Player1DamageableTarget = PlayerRacket1.GetComponent<DamageableTarget>();
-        Player2DamageableTarget = PlayerRacket2.GetComponent<DamageableTarget>();
-
-        FindAbilityInventories();
-
-        MatchResultPanel = GameObject.Find("Match Result Panel");
-
-        Player1ResultText = GameObject.Find("Player 1 Result Text").GetComponent<TextMeshProUGUI>();
-        Player2ResultText = GameObject.Find("Player 2 Result Text").GetComponent<TextMeshProUGUI>();
-        MatchDurationText = GameObject.Find("Match Duration Text").GetComponent<TextMeshProUGUI>();
-        WinnerText = GameObject.Find("Winner Text").GetComponent<TextMeshProUGUI>();
-
-        Player1ScoreText = GameObject.Find("Player 1 Score Text").GetComponent<TextMeshProUGUI>();
-        Player2ScoreText = GameObject.Find("Player 2 Score Text").GetComponent<TextMeshProUGUI>();
-        TimeText = GameObject.Find("Time Text").GetComponent<TextMeshProUGUI>();
-
-        MatchResultPanel.SetActive(false);
-        PlayerRacket2.SetActive(true);
-    }
-
     private void Start()
     {
         ApplyMatchSettings();
         InitializeMatchData();
+
         UpdateScoreTexts();
         UpdateTimeText();
+
         DebugMatchSettings();
     }
 
     private void Update()
     {
-        if (IsMatchFinished) return;
+        if (IsMatchFinished == true) return;
 
         UpdateTimer();
     }
 
+    private void OnDisable()
+    {
+        GoalZone.OnGoalScored -= HandleGoalScored;
+        DamageableTarget.OnTargetDied -= HandleTargetDied;
+    }
+    #endregion
+
+    #region Event Handlers
     private void HandleGoalScored(MatchSide ScoringSide)
     {
-        if (IsMatchFinished) return;
-        
-        if (IsRoundResetting) return;
+        if (IsMatchFinished == true) return;
+        if (IsRoundResetting == true) return;
 
         AddScore(ScoringSide);
 
@@ -126,35 +115,31 @@ public class MatchManager : MonoBehaviour
 
         Debug.Log("Goal scored by: " + ScoringSide);
 
-        if (IsMatchFinished) return;
+        if (IsMatchFinished == true) return;
 
         StartCoroutine(RoundResetRoutine(false));
     }
 
     private void HandleTargetDied(MatchSide DeadSide, MatchSide KillerSide)
     {
-        if (IsMatchFinished)
-        {
-            return;
-        }
-
-        if (IsRoundResetting)
-        {
-            return;
-        }
+        if (IsMatchFinished == true) return;
+        if (IsRoundResetting == true) return;
 
         StartCoroutine(HandleTargetDiedRoutine(DeadSide, KillerSide));
     }
+    #endregion
 
+    #region Round Flow
     private IEnumerator HandleTargetDiedRoutine(MatchSide DeadSide, MatchSide KillerSide)
     {
         AddScore(KillerSide);
+
         UpdateScoreTexts();
         CheckMatchEndByScore();
 
         Debug.Log(DeadSide + " died. Score rewarded to: " + KillerSide);
 
-        if (IsMatchFinished) yield break;
+        if (IsMatchFinished == true) yield break;
 
         yield return RoundResetRoutine(true);
     }
@@ -174,7 +159,7 @@ public class MatchManager : MonoBehaviour
         ResetRacketPositions();
         BallController.ResetBallForRound();
 
-        if (ShouldRestoreHealth)
+        if (ShouldRestoreHealth == true)
         {
             RestoreAllHealth();
         }
@@ -187,50 +172,6 @@ public class MatchManager : MonoBehaviour
         BallController.LaunchBall();
 
         IsRoundResetting = false;
-    }
-
-    private void FindAbilityInventories()
-    {
-        PlayerAbilityInventory[] Inventories = FindObjectsOfType<PlayerAbilityInventory>();
-
-        for (int i = 0; i < Inventories.Length; i++)
-        {
-            if (Inventories[i].GetPlayerSide() == MatchSide.Player1)
-            {
-                Player1AbilityInventory = Inventories[i];
-            }
-
-            else if (Inventories[i].GetPlayerSide() == MatchSide.Player2)
-            {
-                Player2AbilityInventory = Inventories[i];
-            }
-        }
-    }
-
-    private void SetAbilityControlsEnabled(bool CanUseAbilities)
-    {
-        Player1AbilityInventory.SetCanUseAbilities(CanUseAbilities);
-        Player2AbilityInventory.SetCanUseAbilities(CanUseAbilities);
-    }
-
-    private void SetRacketsCanMove(bool CanMove)
-    {
-        Player1ManualController.SetCanMove(CanMove);
-        Player2ManualController.SetCanMove(CanMove);
-        Player2AIController.SetCanFollow(CanMove);
-    }
-
-    private void AddScore(MatchSide ScoringSide)
-    {
-        if (ScoringSide == MatchSide.Player1)
-        {
-            Player1Score++;
-        }
-
-        else if (ScoringSide == MatchSide.Player2)
-        {
-            Player2Score++;
-        }
     }
 
     private void ResetRacketPositions()
@@ -255,11 +196,76 @@ public class MatchManager : MonoBehaviour
         }
     }
 
+    private void SetRacketsCanMove(bool CanMove)
+    {
+        Player1ManualController.SetCanMove(CanMove);
+        Player2ManualController.SetCanMove(CanMove);
+        Player2AIController.SetCanFollow(CanMove);
+    }
+
+    private void SetAbilityControlsEnabled(bool CanUseAbilities)
+    {
+        Player1AbilityInventory.SetCanUseAbilities(CanUseAbilities);
+        Player2AbilityInventory.SetCanUseAbilities(CanUseAbilities);
+    }
+    #endregion
+
+    #region Match Setup
+    private void ApplyMatchSettings()
+    {
+        if (SelectedMatchSettings == null) return;
+
+        PlayerRacket2.SetActive(true);
+
+        if (SelectedMatchSettings.GameMode == GameMode.Singleplayer)
+        {
+            Player2ManualController.enabled = false;
+            Player2AIController.enabled = true;
+        }
+
+        else if (SelectedMatchSettings.GameMode == GameMode.Multiplayer)
+        {
+            Player2ManualController.enabled = true;
+            Player2AIController.enabled = false;
+        }
+    }
+
+    private void InitializeMatchData()
+    {
+        if (SelectedMatchSettings == null) return;
+
+        IsMatchFinished = false;
+        IsRoundResetting = false;
+        ElapsedMatchTime = 0f;
+
+        Player1Score = 0;
+        Player2Score = 0;
+
+        TargetScore = SelectedMatchSettings.TargetScore;
+        RemainingTime = SelectedMatchSettings.MatchDurationSeconds;
+        SelectedEnemyDifficulty = SelectedMatchSettings.Difficulty;
+    }
+    #endregion
+
+    #region Score And Timer
+    private void AddScore(MatchSide ScoringSide)
+    {
+        if (ScoringSide == MatchSide.Player1)
+        {
+            Player1Score++;
+        }
+
+        else if (ScoringSide == MatchSide.Player2)
+        {
+            Player2Score++;
+        }
+    }
+
     private void UpdateTimer()
     {
         ElapsedMatchTime += Time.deltaTime;
 
-        if (RemainingTime == 0f && SelectedMatchSettings.MatchDurationSeconds == 0f)
+        if (SelectedMatchSettings.MatchDurationSeconds == 0f)
         {
             UpdateTimeText();
             return;
@@ -298,7 +304,7 @@ public class MatchManager : MonoBehaviour
 
     private void EndMatch()
     {
-        if (IsMatchFinished) return;
+        if (IsMatchFinished == true) return;
 
         IsMatchFinished = true;
         OnMatchEnded?.Invoke();
@@ -307,41 +313,9 @@ public class MatchManager : MonoBehaviour
 
         Debug.Log("Match ended.");
     }
+    #endregion
 
-    private void ApplyMatchSettings()
-    {
-        if (SelectedMatchSettings == null) return;
-
-        PlayerRacket2.SetActive(true);
-
-        if (SelectedMatchSettings.GameMode == GameMode.Singleplayer)
-        {
-            Player2ManualController.enabled = false;
-            Player2AIController.enabled = true;
-        }
-
-        else if (SelectedMatchSettings.GameMode == GameMode.Multiplayer)
-        {
-            Player2ManualController.enabled = true;
-            Player2AIController.enabled = false;
-        }
-    }
-
-    private void InitializeMatchData()
-    {
-        if (SelectedMatchSettings == null) return;
-
-        IsMatchFinished = false;
-        ElapsedMatchTime = 0f;
-
-        Player1Score = 0;
-        Player2Score = 0;
-
-        TargetScore = SelectedMatchSettings.TargetScore;
-        RemainingTime = SelectedMatchSettings.MatchDurationSeconds;
-        SelectedEnemyDifficulty = SelectedMatchSettings.Difficulty;
-    }
-
+    #region UI Updates
     private void UpdateScoreTexts()
     {
         if (TargetScore == 0)
@@ -376,37 +350,6 @@ public class MatchManager : MonoBehaviour
         TimeText.text = "Time: " + Minutes.ToString("00") + ":" + Seconds.ToString("00");
     }
 
-    private void DebugMatchSettings()
-    {
-        if (SelectedMatchSettings == null) return;
-
-        Debug.Log("Game Mode: " + SelectedMatchSettings.GameMode);
-        Debug.Log("Game Type: " + SelectedMatchSettings.GameType);
-        Debug.Log("Enemy Difficulty: " + GetFormattedEnemyDifficultyText());
-        Debug.Log("Target Score: " + SelectedMatchSettings.TargetScore);
-        Debug.Log("Match Duration Seconds: " + SelectedMatchSettings.MatchDurationSeconds);
-    }
-
-    private string GetFormattedEnemyDifficultyText()
-    {
-        switch (SelectedMatchSettings.Difficulty)
-        {
-            case Difficulty.Easy:
-                return "Easy";
-
-            case Difficulty.Normal:
-                return "Normal";
-
-            case Difficulty.Hard:
-                return "Hard";
-
-            case Difficulty.Insane:
-                return "Insane";
-        }
-
-        return "Unknown";
-    }
-
     private IEnumerator ShowMatchResultPanelWithDelay()
     {
         yield return new WaitForSeconds(MatchEndDelay);
@@ -422,6 +365,107 @@ public class MatchManager : MonoBehaviour
         Player2ResultText.text = "Player 2 Score: " + Player2Score;
         MatchDurationText.text = "Match Duration: " + GetFormattedElapsedMatchTime();
         WinnerText.text = "WINNER: " + GetWinnerText();
+    }
+    #endregion
+
+    #region Button Methods
+    public void OnMatchResultMainMenuButtonPressed()
+    {
+        GameManager.Instance.HandleMainMenuButtonPressed();
+    }
+
+    public void OnMatchResultRestartButtonPressed()
+    {
+        GameManager.Instance.HandleRestartButtonPressed();
+    }
+    #endregion
+
+    #region Reference Setup
+    private void FindCoreReferences()
+    {
+        SelectedMatchSettings = FindObjectOfType<SelectedMatchSettings>();
+        BallController = GameObject.Find("Ball").GetComponent<BallController>();
+    }
+
+    private void FindRacketReferences()
+    {
+        PlayerRacket1 = GameObject.Find("Player Racket 1");
+        PlayerRacket2 = GameObject.Find("Player Racket 2");
+
+        Player1ManualController = PlayerRacket1.GetComponent<PlayerRacketController>();
+        Player2ManualController = PlayerRacket2.GetComponent<PlayerRacketController>();
+        Player2AIController = PlayerRacket2.GetComponent<EnemyRacketController>();
+    }
+
+    private void FindHealthReferences()
+    {
+        Player1DamageableTarget = PlayerRacket1.GetComponent<DamageableTarget>();
+        Player2DamageableTarget = PlayerRacket2.GetComponent<DamageableTarget>();
+    }
+
+    private void FindAbilityInventories()
+    {
+        PlayerAbilityInventory[] Inventories = FindObjectsOfType<PlayerAbilityInventory>();
+
+        for (int i = 0; i < Inventories.Length; i++)
+        {
+            if (Inventories[i].GetPlayerSide() == MatchSide.Player1)
+            {
+                Player1AbilityInventory = Inventories[i];
+            }
+
+            else if (Inventories[i].GetPlayerSide() == MatchSide.Player2)
+            {
+                Player2AbilityInventory = Inventories[i];
+            }
+        }
+    }
+
+    private void FindUIReferences()
+    {
+        MatchResultPanel = GameObject.Find("Match Result Panel");
+
+        Player1ResultText = GameObject.Find("Player 1 Result Text").GetComponent<TextMeshProUGUI>();
+        Player2ResultText = GameObject.Find("Player 2 Result Text").GetComponent<TextMeshProUGUI>();
+        MatchDurationText = GameObject.Find("Match Duration Text").GetComponent<TextMeshProUGUI>();
+        WinnerText = GameObject.Find("Winner Text").GetComponent<TextMeshProUGUI>();
+
+        Player1ScoreText = GameObject.Find("Player 1 Score Text").GetComponent<TextMeshProUGUI>();
+        Player2ScoreText = GameObject.Find("Player 2 Score Text").GetComponent<TextMeshProUGUI>();
+        TimeText = GameObject.Find("Time Text").GetComponent<TextMeshProUGUI>();
+    }
+    #endregion
+
+    #region Helper Methods
+    private void DebugMatchSettings()
+    {
+        if (SelectedMatchSettings == null) return;
+
+        Debug.Log("Game Mode: " + SelectedMatchSettings.GameMode);
+        Debug.Log("Game Type: " + SelectedMatchSettings.GameType);
+        Debug.Log("Enemy Difficulty: " + GetFormattedEnemyDifficultyText());
+        Debug.Log("Target Score: " + SelectedMatchSettings.TargetScore);
+        Debug.Log("Match Duration Seconds: " + SelectedMatchSettings.MatchDurationSeconds);
+    }
+
+    private string GetFormattedEnemyDifficultyText()
+    {
+        switch (SelectedEnemyDifficulty)
+        {
+            case Difficulty.Easy:
+                return "Easy";
+
+            case Difficulty.Normal:
+                return "Normal";
+
+            case Difficulty.Hard:
+                return "Hard";
+
+            case Difficulty.Insane:
+                return "Insane";
+        }
+
+        return "Unknown";
     }
 
     private string GetFormattedElapsedMatchTime()
@@ -447,14 +491,5 @@ public class MatchManager : MonoBehaviour
 
         return "DRAW";
     }
-
-    public void OnMatchResultMainMenuButtonPressed()
-    {
-        GameManager.Instance.HandleMainMenuButtonPressed();
-    }
-
-    public void OnMatchResultRestartButtonPressed()
-    {
-        GameManager.Instance.HandleRestartButtonPressed();
-    }
+    #endregion
 }
