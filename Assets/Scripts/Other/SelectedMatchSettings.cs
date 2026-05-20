@@ -20,6 +20,12 @@ public enum Difficulty
     Insane
 }
 
+public enum BallSpeedMode
+{
+    Fixed,
+    Dynamic
+}
+
 public enum MatchSide
 {
     None,
@@ -34,6 +40,7 @@ public class SelectedMatchSettings : MonoBehaviour
     public GameMode GameMode = GameMode.Singleplayer;
     public GameType GameType = GameType.Classic;
     public Difficulty Difficulty = Difficulty.Easy;
+    public BallSpeedMode BallSpeedMode = BallSpeedMode.Fixed;
 
     [Header("Match Rules")]
     public int TargetScore = 10;

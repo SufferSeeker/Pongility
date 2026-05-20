@@ -161,7 +161,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b40deb39617e261428ec0a3b89b66af1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  SelectedMatchSettings: {fileID: 0}
   BallSpeed: 6
+  DynamicSpeedStartDelay: 30
+  DynamicSpeedDuration: 60
+  DynamicMaxSpeed: 10
   RestartDelay: 1
   StartPosition: {x: 0, y: 0, z: 0}
   UseHorizontalClamp: 1
@@ -171,3 +175,6 @@ MonoBehaviour:
   MoveDirection: {x: 0, y: 0}
   LastHitSide: 0
   IsMatchFinished: 0
+  DefaultBallSpeed: 0
+  CurrentBallSpeed: 0
+  DynamicSpeedTimer: 0

@@ -1,14 +1,20 @@
-using System.Collections;
 using UnityEngine;
 
 public class BallController : MonoBehaviour
 {
     #region Variables
+    [Header("Core References")]
+    [SerializeField] private SelectedMatchSettings SelectedMatchSettings;
+
     [Header("Ball Settings")]
     [SerializeField] private float BallSpeed = 4f;
 
+    [Header("Dynamic Speed Settings")]
+    [SerializeField] private float DynamicSpeedStartDelay = 30f;
+    [SerializeField] private float DynamicSpeedDuration = 60f;
+    [SerializeField] private float DynamicMaxSpeed = 9f;
+
     [Header("Reset Settings")]
-    [SerializeField] private float RestartDelay = 1f;
     [SerializeField] private Vector3 StartPosition;
 
     [Header("Clamp Settings")]
@@ -21,13 +27,22 @@ public class BallController : MonoBehaviour
     [SerializeField] private Vector2 MoveDirection;
     [SerializeField] private MatchSide LastHitSide = MatchSide.None;
     [SerializeField] private bool IsMatchFinished;
+    [SerializeField] private float DefaultBallSpeed;
+    [SerializeField] private float CurrentBallSpeed;
+    [SerializeField] private float DynamicSpeedTimer;
     #endregion
 
     #region Unity Methods
     private void Awake()
     {
+        SelectedMatchSettings = FindFirstObjectByType<SelectedMatchSettings>();
+
         StartPosition = transform.position;
         IsMatchFinished = false;
+
+        DefaultBallSpeed = BallSpeed;
+        CurrentBallSpeed = DefaultBallSpeed;
+        DynamicSpeedTimer = 0f;
     }
 
     private void OnEnable()
@@ -35,13 +50,10 @@ public class BallController : MonoBehaviour
         MatchManager.OnMatchEnded += HandleMatchEnded;
     }
 
-    private void Start()
-    {
-        StartCoroutine(StartBallRoutine());
-    }
-
     private void Update()
     {
+        UpdateDynamicBallSpeed();
+
         Move();
     }
 
@@ -62,6 +74,7 @@ public class BallController : MonoBehaviour
         if (IsMatchFinished == true) return;
 
         StopBallMovement();
+        ResetDynamicSpeedProgress();
     }
 
     public void ResetBallForRound()
@@ -69,6 +82,7 @@ public class BallController : MonoBehaviour
         if (IsMatchFinished == true) return;
 
         StopBallMovement();
+        ResetDynamicSpeedProgress();
 
         transform.position = StartPosition;
         LastHitSide = MatchSide.None;
@@ -87,15 +101,6 @@ public class BallController : MonoBehaviour
         StopBallMovement();
     }
 
-    private IEnumerator StartBallRoutine()
-    {
-        MoveDirection = Vector2.zero;
-
-        yield return new WaitForSeconds(RestartDelay);
-
-        SetRandomStartDirection();
-    }
-
     private void StopBallMovement()
     {
         StopAllCoroutines();
@@ -106,7 +111,7 @@ public class BallController : MonoBehaviour
     #region Movement
     private void Move()
     {
-        float MovementAmount = BallSpeed * Time.deltaTime;
+        float MovementAmount = CurrentBallSpeed * Time.deltaTime;
 
         Vector3 Movement = (Vector3)(MoveDirection * MovementAmount);
 
@@ -164,6 +169,40 @@ public class BallController : MonoBehaviour
     private void BounceHorizontally()
     {
         MoveDirection = new Vector2(-MoveDirection.x, MoveDirection.y).normalized;
+    }
+    #endregion
+
+    #region Dynamic Speed
+    private void UpdateDynamicBallSpeed()
+    {
+        if (SelectedMatchSettings == null) return;
+        if (SelectedMatchSettings.BallSpeedMode != BallSpeedMode.Dynamic) return;
+        if (MoveDirection == Vector2.zero) return;
+        if (IsMatchFinished == true) return;
+
+        DynamicSpeedTimer += Time.deltaTime;
+
+        if (DynamicSpeedTimer <= DynamicSpeedStartDelay)
+        {
+            CurrentBallSpeed = DefaultBallSpeed;
+            return;
+        }
+
+        float AccelerationTime = DynamicSpeedTimer - DynamicSpeedStartDelay;
+        float AccelerationProgress = AccelerationTime / DynamicSpeedDuration;
+
+        if (AccelerationProgress > 1f)
+        {
+            AccelerationProgress = 1f;
+        }
+
+        CurrentBallSpeed = Mathf.Lerp(DefaultBallSpeed, DynamicMaxSpeed, AccelerationProgress);
+    }
+
+    private void ResetDynamicSpeedProgress()
+    {
+        DynamicSpeedTimer = 0f;
+        CurrentBallSpeed = DefaultBallSpeed;
     }
     #endregion
 

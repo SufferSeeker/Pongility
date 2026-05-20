@@ -51,11 +51,14 @@ public class MatchManager : MonoBehaviour
     [SerializeField] private bool IsRoundResetting;
     [SerializeField] private float ElapsedMatchTime;
 
+    [Header("Events")]
     public static Action OnMatchEnded;
+    public static Action OnRoundEndFreezeStarted;
+    public static Action OnRoundCleanupRequested;
 
     [Header("Other Settings")]
     [SerializeField] private float MatchEndDelay = 1f;
-    [SerializeField] private float RoundResetDelay = 2f;
+    [SerializeField] private float RoundResetDelay = 1f;
     #endregion
 
     #region Unity Methods
@@ -86,11 +89,14 @@ public class MatchManager : MonoBehaviour
         UpdateTimeText();
 
         DebugMatchSettings();
+
+        StartCoroutine(InitialRoundStartRoutine());
     }
 
     private void Update()
     {
         if (IsMatchFinished == true) return;
+        if (IsRoundResetting == true) return;
 
         UpdateTimer();
     }
@@ -130,6 +136,25 @@ public class MatchManager : MonoBehaviour
     #endregion
 
     #region Round Flow
+    private IEnumerator InitialRoundStartRoutine()
+    {
+        IsRoundResetting = true;
+
+        SetRacketsCanMove(false);
+        SetAbilityControlsEnabled(false);
+
+        BallController.ResetBallForRound();
+
+        yield return new WaitForSeconds(RoundResetDelay);
+
+        SetRacketsCanMove(true);
+        SetAbilityControlsEnabled(true);
+
+        BallController.LaunchBall();
+
+        IsRoundResetting = false;
+    }
+
     private IEnumerator HandleTargetDiedRoutine(MatchSide DeadSide, MatchSide KillerSide)
     {
         AddScore(KillerSide);
@@ -152,9 +177,11 @@ public class MatchManager : MonoBehaviour
         SetAbilityControlsEnabled(false);
 
         BallController.StopBallForRound();
-        CleanupActiveFireballs();
+        OnRoundEndFreezeStarted?.Invoke();
 
         yield return new WaitForSeconds(RoundResetDelay);
+
+        OnRoundCleanupRequested?.Invoke();
 
         ResetRacketPositions();
         BallController.ResetBallForRound();
@@ -184,16 +211,6 @@ public class MatchManager : MonoBehaviour
     {
         Player1DamageableTarget.RestoreFullHealth();
         Player2DamageableTarget.RestoreFullHealth();
-    }
-
-    private void CleanupActiveFireballs()
-    {
-        AbilityFireball[] Fireballs = FindObjectsOfType<AbilityFireball>();
-
-        for (int i = 0; i < Fireballs.Length; i++)
-        {
-            Destroy(Fireballs[i].gameObject);
-        }
     }
 
     private void SetRacketsCanMove(bool CanMove)
@@ -446,6 +463,7 @@ public class MatchManager : MonoBehaviour
         Debug.Log("Enemy Difficulty: " + GetFormattedEnemyDifficultyText());
         Debug.Log("Target Score: " + SelectedMatchSettings.TargetScore);
         Debug.Log("Match Duration Seconds: " + SelectedMatchSettings.MatchDurationSeconds);
+        Debug.Log("Ball Speed Mode: " + SelectedMatchSettings.BallSpeedMode);
     }
 
     private string GetFormattedEnemyDifficultyText()

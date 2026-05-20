@@ -47,6 +47,7 @@ public class AbilityDefinition : ScriptableObject
 
     [Header("Spawn Settings")]
     [SerializeField] private AbilitySpawnPointType SpawnPointType;
+    [SerializeField] private float ActiveLifeTime = 6f;
     #endregion
 
     #region Getters
@@ -83,6 +84,11 @@ public class AbilityDefinition : ScriptableObject
     public AbilitySpawnPointType GetSpawnPointType()
     {
         return SpawnPointType;
+    }
+
+    public float GetActiveLifeTime()
+    {
+        return ActiveLifeTime;
     }
     #endregion
 }

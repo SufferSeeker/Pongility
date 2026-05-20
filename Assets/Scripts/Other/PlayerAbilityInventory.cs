@@ -141,12 +141,13 @@ public class PlayerAbilityInventory : MonoBehaviour
 
         GameObject SpawnedAbility = Instantiate(AbilityPrefab, SpawnPoint.position, Quaternion.identity);
 
+        AbilityLifetime AbilityLifetime = SpawnedAbility.GetComponent<AbilityLifetime>();
+
+        AbilityLifetime.Initialize(SelectedAbility.GetActiveLifeTime());
+
         AbilityFireball Fireball = SpawnedAbility.GetComponent<AbilityFireball>();
 
-        if (Fireball != null)
-        {
-            Fireball.Initialize(GetAbilityDirection(), PlayerSide, SpawnPoint);
-        }
+        Fireball.Initialize(GetAbilityDirection(), PlayerSide, SpawnPoint);
     }
     #endregion
 

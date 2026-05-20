@@ -21,6 +21,7 @@ public class UIManager : MonoBehaviour
     [SerializeField] private MatchSettingButtonView TimeButtonView;
     [SerializeField] private MatchSettingButtonView ScoreButtonView;
     [SerializeField] private MatchSettingButtonView DifficultyButtonView;
+    [SerializeField] private MatchSettingButtonView BallSpeedButtonView;
     #endregion
 
     #region Unity Methods
@@ -40,6 +41,7 @@ public class UIManager : MonoBehaviour
         UpdateDifficultyAvailability();
         UpdateScoreButtonVisual();
         UpdateTimeButtonVisual();
+        UpdateBallSpeedButtonVisual();
     }
     #endregion
 
@@ -261,6 +263,23 @@ public class UIManager : MonoBehaviour
 
         UpdateTimeButtonVisual();
     }
+
+    public void OnBallSpeedButtonPressed()
+    {
+        Debug.Log("Ball Speed button pressed.");
+
+        if (SelectedMatchSettings.BallSpeedMode == BallSpeedMode.Fixed)
+        {
+            SelectedMatchSettings.BallSpeedMode = BallSpeedMode.Dynamic;
+        }
+
+        else
+        {
+            SelectedMatchSettings.BallSpeedMode = BallSpeedMode.Fixed;
+        }
+
+        UpdateBallSpeedButtonVisual();
+    }
     #endregion
 
     #region Visual Updates
@@ -370,6 +389,28 @@ public class UIManager : MonoBehaviour
         return 0;
     }
 
+    private void UpdateBallSpeedButtonVisual()
+    {
+        int BallSpeedVisualIndex = GetBallSpeedVisualIndex();
+
+        BallSpeedButtonView.ApplyVisual(BallSpeedVisualIndex);
+    }
+
+    private int GetBallSpeedVisualIndex()
+    {
+        if (SelectedMatchSettings.BallSpeedMode == BallSpeedMode.Fixed)
+        {
+            return 0;
+        }
+
+        if (SelectedMatchSettings.BallSpeedMode == BallSpeedMode.Dynamic)
+        {
+            return 1;
+        }
+
+        return 0;
+    }
+
     private void UpdateDifficultyAvailability()
     {
         if (SelectedMatchSettings.GameMode == GameMode.Multiplayer)
@@ -416,6 +457,7 @@ public class UIManager : MonoBehaviour
 
         TimeButtonView = GameObject.Find("Time Button").GetComponent<MatchSettingButtonView>();
         ScoreButtonView = GameObject.Find("Score Button").GetComponent<MatchSettingButtonView>();
+        BallSpeedButtonView = GameObject.Find("Ball Speed Button").GetComponent<MatchSettingButtonView>();
     }
 
     private void ShowPanel(GameObject PanelToShow)

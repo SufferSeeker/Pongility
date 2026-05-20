@@ -23,6 +23,7 @@ public class AbilityFireball : MonoBehaviour
     [SerializeField] private MatchSide OwnerSide;
     [SerializeField] private bool CanMove;
     [SerializeField] private bool HasImpacted;
+    [SerializeField] private bool IsFrozenByRoundEnd;
     #endregion
 
     #region Unity Methods
@@ -33,8 +34,15 @@ public class AbilityFireball : MonoBehaviour
 
         CanMove = false;
         HasImpacted = false;
+        IsFrozenByRoundEnd = false;
 
         FireballCollider.enabled = false;
+    }
+
+    private void OnEnable()
+    {
+        MatchManager.OnRoundEndFreezeStarted += FreezeForRoundEnd;
+        MatchManager.OnMatchEnded += FreezeForRoundEnd;
     }
 
     private void Update()
@@ -44,9 +52,16 @@ public class AbilityFireball : MonoBehaviour
         MoveFireball();
     }
 
+    private void OnDisable()
+    {
+        MatchManager.OnRoundEndFreezeStarted -= FreezeForRoundEnd;
+        MatchManager.OnMatchEnded -= FreezeForRoundEnd;
+    }
+
     private void OnTriggerEnter2D(Collider2D Collision)
     {
         if (HasImpacted == true) return;
+        if (IsFrozenByRoundEnd == true) return;
 
         DamageableTarget Target = Collision.GetComponent<DamageableTarget>();
 
@@ -114,10 +129,25 @@ public class AbilityFireball : MonoBehaviour
     }
     #endregion
 
+    #region Round Events
+    private void FreezeForRoundEnd()
+    {
+        if (IsFrozenByRoundEnd == true) return;
+
+        IsFrozenByRoundEnd = true;
+        CanMove = false;
+
+        FireballCollider.enabled = false;
+
+        FireballAnimator.speed = 0f;
+    }
+    #endregion
+
     #region Animation Event Methods
     public void StartForward()
     {
         if (HasImpacted == true) return;
+        if (IsFrozenByRoundEnd == true) return;
 
         transform.SetParent(null, true);
 

@@ -9,7 +9,6 @@ public class MatchSettingButtonSprites
     public Sprite PressedSprite;
 }
 
-
 public class MatchSettingButtonView : MonoBehaviour
 {
     #region Variables
