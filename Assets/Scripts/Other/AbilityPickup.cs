@@ -5,6 +5,7 @@ public class AbilityPickup : MonoBehaviour
     #region Variables
     [Header("Ability Settings")]
     [SerializeField] private AbilityDefinition AbilityDefinition;
+    [SerializeField] private SpriteRenderer PickupSpriteRenderer;
 
     [Header("Player Inventories")]
     [SerializeField] private PlayerAbilityInventory Player1Inventory;
@@ -14,7 +15,9 @@ public class AbilityPickup : MonoBehaviour
     #region Unity Methods
     private void Awake()
     {
+        FindPickupReferences();
         FindPlayerInventories();
+        UpdatePickupVisual();
     }
 
     private void OnTriggerEnter2D(Collider2D Collision)
@@ -39,6 +42,32 @@ public class AbilityPickup : MonoBehaviour
         {
             Destroy(gameObject);
         }
+    }
+    #endregion
+
+    #region Initialization
+    public void Initialize(AbilityDefinition NewAbilityDefinition)
+    {
+        AbilityDefinition = NewAbilityDefinition;
+
+        UpdatePickupVisual();
+    }
+    #endregion
+
+    #region Reference Setup
+    private void FindPickupReferences()
+    {
+        PickupSpriteRenderer = GetComponent<SpriteRenderer>();
+    }
+    #endregion
+
+    #region Visual
+    private void UpdatePickupVisual()
+    {
+        if (AbilityDefinition == null) return;
+        if (PickupSpriteRenderer == null) return;
+
+        PickupSpriteRenderer.sprite = AbilityDefinition.GetAbilityIcon();
     }
     #endregion
 

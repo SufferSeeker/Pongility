@@ -55,6 +55,7 @@ public class MatchManager : MonoBehaviour
     public static Action OnMatchEnded;
     public static Action OnRoundEndFreezeStarted;
     public static Action OnRoundCleanupRequested;
+    public static Action OnRoundGameplayStarted;
 
     [Header("Other Settings")]
     [SerializeField] private float MatchEndDelay = 1f;
@@ -152,6 +153,8 @@ public class MatchManager : MonoBehaviour
 
         BallController.LaunchBall();
 
+        OnRoundGameplayStarted?.Invoke();
+
         IsRoundResetting = false;
     }
 
@@ -197,6 +200,8 @@ public class MatchManager : MonoBehaviour
         SetAbilityControlsEnabled(true);
 
         BallController.LaunchBall();
+
+        OnRoundGameplayStarted?.Invoke();
 
         IsRoundResetting = false;
     }

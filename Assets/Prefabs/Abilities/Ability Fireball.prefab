@@ -191,7 +191,7 @@ MonoBehaviour:
   ExplodeTriggerName: Explode
   MovementSpeed: 8
   MoveDirection: {x: 0, y: 0}
-  DamageAmount: 50
+  DamageAmount: 20
   OwnerSide: 0
   CanMove: 0
   HasImpacted: 0
