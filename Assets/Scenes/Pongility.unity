@@ -5519,6 +5519,7 @@ MonoBehaviour:
   MaxActivePickups: 3
   SpawnableAbilities:
   - {fileID: 11400000, guid: 094e948b1e7f26a47bf2ed01934e8a31, type: 2}
+  - {fileID: 11400000, guid: c8d66b4303e7442479ec6a479f19493f, type: 2}
   IsSpawnerEnabled: 0
   CanSpawn: 0
   CurrentSpawnTimer: 0

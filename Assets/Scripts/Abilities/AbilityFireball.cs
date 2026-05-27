@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class AbilityFireball : MonoBehaviour
+public class AbilityFireball : MonoBehaviour, IUsableAbility, IDeflectable
 {
     #region Variables
     [Header("References")]
@@ -126,6 +126,25 @@ public class AbilityFireball : MonoBehaviour
         FireballCollider.enabled = false;
 
         PlayAnimationTrigger(ExplodeTriggerName);
+    }
+    #endregion
+
+    #region Deflect
+    public MatchSide GetOwnerSide()
+    {
+        return OwnerSide;
+    }
+
+    public void Deflect(MatchSide NewOwnerSide)
+    {
+        if (HasImpacted == true) return;
+        if (IsFrozenByRoundEnd == true) return;
+
+        OwnerSide = NewOwnerSide;
+
+        MoveDirection = -MoveDirection;
+
+        SetFireballRotation();
     }
     #endregion
 

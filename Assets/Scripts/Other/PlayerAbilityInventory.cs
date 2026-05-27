@@ -3,6 +3,7 @@ using UnityEngine;
 
 public class PlayerAbilityInventory : MonoBehaviour
 {
+
     #region Variables
     [Header("Player Settings")]
     [SerializeField] private MatchSide PlayerSide;
@@ -137,6 +138,7 @@ public class PlayerAbilityInventory : MonoBehaviour
     private void SpawnAbility(AbilityDefinition SelectedAbility)
     {
         GameObject AbilityPrefab = SelectedAbility.GetAbilityPrefab();
+
         Transform SpawnPoint = GetSpawnPoint(SelectedAbility.GetSpawnPointType());
 
         GameObject SpawnedAbility = Instantiate(AbilityPrefab, SpawnPoint.position, Quaternion.identity);
@@ -145,9 +147,9 @@ public class PlayerAbilityInventory : MonoBehaviour
 
         AbilityLifetime.Initialize(SelectedAbility.GetActiveLifeTime());
 
-        AbilityFireball Fireball = SpawnedAbility.GetComponent<AbilityFireball>();
+        IUsableAbility UsableAbility = SpawnedAbility.GetComponent<IUsableAbility>();
 
-        Fireball.Initialize(GetAbilityDirection(), PlayerSide, SpawnPoint);
+        UsableAbility.Initialize(GetAbilityDirection(), PlayerSide, SpawnPoint);
     }
     #endregion
 

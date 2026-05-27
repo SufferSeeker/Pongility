@@ -10,13 +10,13 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: ab7e7ae908239c14da4cde0ebfa71724, type: 3}
-  m_Name: Fireball
+  m_Name: Deflect
   m_EditorClassIdentifier: 
-  AbilityName: Fireball
-  AbilityIcon: {fileID: 21300000, guid: d412bd144db38f242a7bdf13d3b13441, type: 3}
-  AbilityDescription: Sends a fireball towards the opponent.
+  AbilityName: Deflect
+  AbilityIcon: {fileID: 0}
+  AbilityDescription: 
   TargetType: 0
   DeliveryType: 0
-  AbilityPrefab: {fileID: 1447219839051344035, guid: 7f326740dd3c6c34484098aa0891651c, type: 3}
+  AbilityPrefab: {fileID: 0}
   SpawnPointType: 0
-  ActiveLifeTime: 0.5
+  ActiveLifeTime: 6
