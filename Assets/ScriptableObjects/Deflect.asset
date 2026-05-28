@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: Deflect
   m_EditorClassIdentifier: 
   AbilityName: Deflect
-  AbilityIcon: {fileID: 21300000, guid: d412bd144db38f242a7bdf13d3b13441, type: 3}
+  AbilityIcon: {fileID: 21300000, guid: f8074e0ad7a43b8438215e6af611fb12, type: 3}
   AbilityDescription: 
   TargetType: 0
   DeliveryType: 0

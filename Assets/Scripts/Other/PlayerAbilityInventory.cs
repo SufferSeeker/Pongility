@@ -9,7 +9,6 @@ public class PlayerAbilityInventory : MonoBehaviour
 
     [Header("Ability Slots")]
     [SerializeField] private AbilityDefinition[] AbilitySlots = new AbilityDefinition[3];
-    [SerializeField] private int SelectedSlotIndex;
 
     [Header("Spawn Points")]
     [SerializeField] private Transform RacketCenter;
@@ -82,54 +81,36 @@ public class PlayerAbilityInventory : MonoBehaviour
     }
     #endregion
 
-    #region Slot Selection
-    private void SelectPreviousSlot()
-    {
-        if (CanUseAbilities == false) return;
-
-        SelectedSlotIndex--;
-
-        if (SelectedSlotIndex < 0)
-        {
-            SelectedSlotIndex = AbilitySlots.Length - 1;
-        }
-
-        OnInventoryChanged?.Invoke();
-    }
-
-    private void SelectNextSlot()
-    {
-        if (CanUseAbilities == false) return;
-
-        SelectedSlotIndex++;
-
-        if (SelectedSlotIndex >= AbilitySlots.Length)
-        {
-            SelectedSlotIndex = 0;
-        }
-
-        OnInventoryChanged?.Invoke();
-    }
-    #endregion
-
     #region Ability Usage
-    private void UseSelectedAbility()
+    public void UseAbilityAtSlot(int SlotIndex)
     {
         if (CanUseAbilities == false) return;
 
-        AbilityDefinition SelectedAbility = AbilitySlots[SelectedSlotIndex];
-
-        if (SelectedAbility == null)
+        if (SlotIndex < 0)
         {
-            Debug.Log(PlayerSide + " selected ability slot is empty.");
+            Debug.Log(PlayerSide + " ability slot index is below zero.");
             return;
         }
 
-        SpawnAbility(SelectedAbility);
+        if (SlotIndex >= AbilitySlots.Length)
+        {
+            Debug.Log(PlayerSide + " ability slot index is out of range.");
+            return;
+        }
 
-        Debug.Log(PlayerSide + " used " + SelectedAbility.GetAbilityName());
+        AbilityDefinition AbilityToUse = AbilitySlots[SlotIndex];
 
-        AbilitySlots[SelectedSlotIndex] = null;
+        if (AbilityToUse == null)
+        {
+            Debug.Log(PlayerSide + " ability slot " + (SlotIndex + 1) + " is empty.");
+            return;
+        }
+
+        SpawnAbility(AbilityToUse);
+
+        Debug.Log(PlayerSide + " used " + AbilityToUse.GetAbilityName() + " from slot " + (SlotIndex + 1));
+
+        AbilitySlots[SlotIndex] = null;
 
         OnInventoryChanged?.Invoke();
     }
@@ -185,16 +166,12 @@ public class PlayerAbilityInventory : MonoBehaviour
     {
         if (PlayerSide == MatchSide.Player1)
         {
-            InputManager.OnPlayer1PreviousAbilitySlot += SelectPreviousSlot;
-            InputManager.OnPlayer1NextAbilitySlot += SelectNextSlot;
-            InputManager.OnPlayer1UseSelectedAbility += UseSelectedAbility;
+            InputManager.OnPlayer1AbilitySlotInput += UseAbilityAtSlot;
         }
 
         else if (PlayerSide == MatchSide.Player2)
         {
-            InputManager.OnPlayer2PreviousAbilitySlot += SelectPreviousSlot;
-            InputManager.OnPlayer2NextAbilitySlot += SelectNextSlot;
-            InputManager.OnPlayer2UseSelectedAbility += UseSelectedAbility;
+            InputManager.OnPlayer2AbilitySlotInput += UseAbilityAtSlot;
         }
     }
 
@@ -202,16 +179,12 @@ public class PlayerAbilityInventory : MonoBehaviour
     {
         if (PlayerSide == MatchSide.Player1)
         {
-            InputManager.OnPlayer1PreviousAbilitySlot -= SelectPreviousSlot;
-            InputManager.OnPlayer1NextAbilitySlot -= SelectNextSlot;
-            InputManager.OnPlayer1UseSelectedAbility -= UseSelectedAbility;
+            InputManager.OnPlayer1AbilitySlotInput -= UseAbilityAtSlot;
         }
 
         else if (PlayerSide == MatchSide.Player2)
         {
-            InputManager.OnPlayer2PreviousAbilitySlot -= SelectPreviousSlot;
-            InputManager.OnPlayer2NextAbilitySlot -= SelectNextSlot;
-            InputManager.OnPlayer2UseSelectedAbility -= UseSelectedAbility;
+            InputManager.OnPlayer2AbilitySlotInput -= UseAbilityAtSlot;
         }
     }
     #endregion
@@ -220,11 +193,6 @@ public class PlayerAbilityInventory : MonoBehaviour
     public MatchSide GetPlayerSide()
     {
         return PlayerSide;
-    }
-
-    public int GetSelectedSlotIndex()
-    {
-        return SelectedSlotIndex;
     }
     #endregion
 

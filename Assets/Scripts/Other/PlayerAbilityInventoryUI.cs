@@ -12,9 +12,6 @@ public class PlayerAbilityInventoryUI : MonoBehaviour
 
     [Header("Slot Icons")]
     [SerializeField] private Image[] AbilityImages = new Image[3];
-
-    [Header("Selected Slot Images")]
-    [SerializeField] private Image[] SelectedAbilityImages = new Image[3];
     #endregion
 
     #region Unity Methods
@@ -23,7 +20,6 @@ public class PlayerAbilityInventoryUI : MonoBehaviour
         Inventory = FindInventoryBySide();
 
         FindAbilityImages();
-        FindSelectedAbilityImages();
     }
 
     private void OnEnable()
@@ -48,7 +44,6 @@ public class PlayerAbilityInventoryUI : MonoBehaviour
         for (int i = 0; i < AbilityImages.Length; i++)
         {
             UpdateAbilityIcon(i);
-            UpdateSelectedSlotImage(i);
         }
     }
 
@@ -65,19 +60,6 @@ public class PlayerAbilityInventoryUI : MonoBehaviour
 
         AbilityImages[SlotIndex].gameObject.SetActive(true);
         AbilityImages[SlotIndex].sprite = CurrentAbility.GetAbilityIcon();
-    }
-
-    private void UpdateSelectedSlotImage(int SlotIndex)
-    {
-        if (Inventory.GetSelectedSlotIndex() == SlotIndex)
-        {
-            SelectedAbilityImages[SlotIndex].gameObject.SetActive(true);
-        }
-
-        else
-        {
-            SelectedAbilityImages[SlotIndex].gameObject.SetActive(false);
-        }
     }
     #endregion
 
@@ -105,17 +87,6 @@ public class PlayerAbilityInventoryUI : MonoBehaviour
         {
             Transform AbilitySlot = AbilitySlotsParent.Find("Ability Slot " + (i + 1));
             AbilityImages[i] = AbilitySlot.Find("Ability " + (i + 1)).GetComponent<Image>();
-        }
-    }
-
-    private void FindSelectedAbilityImages()
-    {
-        Transform AbilitySlotsParent = transform.Find("Ability Slots");
-
-        for (int i = 0; i < SelectedAbilityImages.Length; i++)
-        {
-            Transform AbilitySlot = AbilitySlotsParent.Find("Ability Slot " + (i + 1));
-            SelectedAbilityImages[i] = AbilitySlot.Find("Selected Ability " + (i + 1)).GetComponent<Image>();
         }
     }
     #endregion

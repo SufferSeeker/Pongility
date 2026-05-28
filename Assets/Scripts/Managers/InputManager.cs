@@ -7,13 +7,8 @@ public class InputManager : MonoBehaviour
     public static event Action<float> OnPlayer1Move;
     public static event Action<float> OnPlayer2Move;
 
-    public static event Action OnPlayer1PreviousAbilitySlot;
-    public static event Action OnPlayer1NextAbilitySlot;
-    public static event Action OnPlayer1UseSelectedAbility;
-
-    public static event Action OnPlayer2PreviousAbilitySlot;
-    public static event Action OnPlayer2NextAbilitySlot;
-    public static event Action OnPlayer2UseSelectedAbility;
+    public static event Action<int> OnPlayer1AbilitySlotInput;
+    public static event Action<int> OnPlayer2AbilitySlotInput;
 
     public static event Action OnPause;
     #endregion
@@ -21,6 +16,7 @@ public class InputManager : MonoBehaviour
     #region Unity Methods
     private void Update()
     {
+
         GetPlayer1Input();
         GetPlayer2Input();
 
@@ -72,17 +68,17 @@ public class InputManager : MonoBehaviour
     {
         if (Input.GetKeyDown(KeyCode.C))
         {
-            OnPlayer1PreviousAbilitySlot?.Invoke();
-        }
-
-        if (Input.GetKeyDown(KeyCode.B))
-        {
-            OnPlayer1NextAbilitySlot?.Invoke();
+            OnPlayer1AbilitySlotInput?.Invoke(0);
         }
 
         if (Input.GetKeyDown(KeyCode.V))
         {
-            OnPlayer1UseSelectedAbility?.Invoke();
+            OnPlayer1AbilitySlotInput?.Invoke(1);
+        }
+
+        if (Input.GetKeyDown(KeyCode.B))
+        {
+            OnPlayer1AbilitySlotInput?.Invoke(2);
         }
     }
 
@@ -90,17 +86,17 @@ public class InputManager : MonoBehaviour
     {
         if (Input.GetKeyDown(KeyCode.J))
         {
-            OnPlayer2PreviousAbilitySlot?.Invoke();
-        }
-
-        if (Input.GetKeyDown(KeyCode.L))
-        {
-            OnPlayer2NextAbilitySlot?.Invoke();
+            OnPlayer2AbilitySlotInput?.Invoke(0);
         }
 
         if (Input.GetKeyDown(KeyCode.K))
         {
-            OnPlayer2UseSelectedAbility?.Invoke();
+            OnPlayer2AbilitySlotInput?.Invoke(1);
+        }
+
+        if (Input.GetKeyDown(KeyCode.L))
+        {
+            OnPlayer2AbilitySlotInput?.Invoke(2);
         }
     }
     #endregion
