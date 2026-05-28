@@ -3,7 +3,6 @@ using UnityEngine;
 
 public class PlayerAbilityInventory : MonoBehaviour
 {
-
     #region Variables
     [Header("Player Settings")]
     [SerializeField] private MatchSide PlayerSide;

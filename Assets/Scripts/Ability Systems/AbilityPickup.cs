@@ -2,6 +2,7 @@ using UnityEngine;
 
 public class AbilityPickup : MonoBehaviour
 {
+
     #region Variables
     [Header("Ability Settings")]
     [SerializeField] private AbilityDefinition AbilityDefinition;

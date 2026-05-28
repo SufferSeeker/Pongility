@@ -402,6 +402,15 @@ public class MatchManager : MonoBehaviour
     }
     #endregion
 
+    #region Debug Methods
+    public void DebugClearAbilityObjects()
+    {
+        OnRoundCleanupRequested?.Invoke();
+
+        Debug.Log("Debug requested ability object cleanup.");
+    }
+    #endregion
+
     #region Reference Setup
     private void FindCoreReferences()
     {

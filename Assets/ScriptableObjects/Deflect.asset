@@ -13,10 +13,10 @@ MonoBehaviour:
   m_Name: Deflect
   m_EditorClassIdentifier: 
   AbilityName: Deflect
-  AbilityIcon: {fileID: 0}
+  AbilityIcon: {fileID: 21300000, guid: d412bd144db38f242a7bdf13d3b13441, type: 3}
   AbilityDescription: 
   TargetType: 0
   DeliveryType: 0
-  AbilityPrefab: {fileID: 0}
+  AbilityPrefab: {fileID: 6498467475470486090, guid: 34483a973b18f674c802601aee3a1fa5, type: 3}
   SpawnPointType: 0
-  ActiveLifeTime: 6
+  ActiveLifeTime: 0.5

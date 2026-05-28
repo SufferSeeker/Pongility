@@ -105,8 +105,14 @@ public class AbilitySpawner : MonoBehaviour
     #region Spawn Logic
     private void SpawnPickup()
     {
-        Transform SelectedSpawnPoint = GetRandomEmptySpawnPoint();
         AbilityDefinition SelectedAbility = GetRandomAbilityDefinition();
+
+        SpawnPickup(SelectedAbility);
+    }
+
+    private void SpawnPickup(AbilityDefinition SelectedAbility)
+    {
+        Transform SelectedSpawnPoint = GetRandomEmptySpawnPoint();
 
         GameObject SpawnedPickup = Instantiate(AbilityPickupPrefab, SelectedSpawnPoint.position, Quaternion.identity);
 
@@ -159,6 +165,38 @@ public class AbilitySpawner : MonoBehaviour
 
         return false;
     }
+
+    public void SpawnSpecificAbilityForDebug(AbilityDefinition SelectedAbility)
+    {
+        if (IsSpawnerEnabled == false)
+        {
+            Debug.Log("Ability Spawner is not enabled.");
+            return;
+        }
+
+        CleanDestroyedPickupRecords();
+
+        if (SpawnedPickups.Count >= MaxActivePickups)
+        {
+            Debug.Log("Cannot spawn debug pickup. Maximum active pickup count reached.");
+            return;
+        }
+
+        List<Transform> EmptySpawnPoints = GetEmptySpawnPoints();
+
+        if (EmptySpawnPoints.Count == 0)
+        {
+            Debug.Log("Cannot spawn debug pickup. No empty spawn point found.");
+            return;
+        }
+
+        SpawnPickup(SelectedAbility);
+
+        CurrentSpawnTimer = 0f;
+        CurrentRequiredDelay = SpawnInterval;
+
+        Debug.Log("Debug spawned pickup: " + SelectedAbility.GetAbilityName());
+    }
     #endregion
 
     #region Cleanup
@@ -190,6 +228,13 @@ public class AbilitySpawner : MonoBehaviour
         }
 
         SpawnedPickups.Clear();
+    }
+    #endregion
+
+    #region Getters
+    public List<AbilityDefinition> GetSpawnableAbilities()
+    {
+        return SpawnableAbilities;
     }
     #endregion
 
