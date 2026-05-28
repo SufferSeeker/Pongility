@@ -6,7 +6,10 @@ using UnityEngine;
 public class PongilityDebugToolEditor : Editor
 {
     private SerializedProperty SelectedAbilityProperty;
+    private SerializedProperty DebugBallSpeedProperty;
+
     private SerializedProperty AbilitySpawnerProperty;
+    private SerializedProperty BallControllerProperty;
     private SerializedProperty Player1InventoryProperty;
     private SerializedProperty Player2InventoryProperty;
     private SerializedProperty MatchManagerProperty;
@@ -16,7 +19,10 @@ public class PongilityDebugToolEditor : Editor
     private void OnEnable()
     {
         SelectedAbilityProperty = serializedObject.FindProperty("SelectedAbility");
+        DebugBallSpeedProperty = serializedObject.FindProperty("DebugBallSpeed");
+
         AbilitySpawnerProperty = serializedObject.FindProperty("AbilitySpawner");
+        BallControllerProperty = serializedObject.FindProperty("BallController");
         Player1InventoryProperty = serializedObject.FindProperty("Player1Inventory");
         Player2InventoryProperty = serializedObject.FindProperty("Player2Inventory");
         MatchManagerProperty = serializedObject.FindProperty("MatchManager");
@@ -41,6 +47,7 @@ public class PongilityDebugToolEditor : Editor
         EditorGUI.BeginDisabledGroup(Application.isPlaying == false);
 
         DrawAbilityDebugSection(DebugTool);
+        DrawBallDebugSection(DebugTool);
 
         EditorGUI.EndDisabledGroup();
 
@@ -141,6 +148,7 @@ public class PongilityDebugToolEditor : Editor
         EditorGUI.BeginDisabledGroup(true);
 
         EditorGUILayout.PropertyField(AbilitySpawnerProperty);
+        EditorGUILayout.PropertyField(BallControllerProperty);
         EditorGUILayout.PropertyField(Player1InventoryProperty);
         EditorGUILayout.PropertyField(Player2InventoryProperty);
         EditorGUILayout.PropertyField(MatchManagerProperty);
@@ -185,6 +193,42 @@ public class PongilityDebugToolEditor : Editor
         if (DrawCenteredButton("Clear Ability Objects") == true)
         {
             DebugTool.ClearAbilityObjects();
+        }
+    }
+
+    private void DrawBallDebugSection(PongilityDebugTool DebugTool)
+    {
+        EditorGUILayout.Space(10f);
+        EditorGUILayout.LabelField("Ball Debug", EditorStyles.boldLabel);
+
+        EditorGUILayout.PropertyField(DebugBallSpeedProperty);
+
+        EditorGUILayout.BeginHorizontal();
+
+        GUILayout.FlexibleSpace();
+
+        if (GUILayout.Button("Stop Ball", GUILayout.Width(120f), GUILayout.Height(24f)) == true)
+        {
+            DebugTool.StopBall();
+        }
+
+        if (GUILayout.Button("Resume Ball", GUILayout.Width(120f), GUILayout.Height(24f)) == true)
+        {
+            DebugTool.ResumeBall();
+        }
+
+        GUILayout.FlexibleSpace();
+
+        EditorGUILayout.EndHorizontal();
+
+        if (DrawCenteredButton("Reset Ball To Center") == true)
+        {
+            DebugTool.ResetBallToCenter();
+        }
+
+        if (DrawCenteredButton("Set Ball Speed") == true)
+        {
+            DebugTool.SetBallSpeed();
         }
     }
 

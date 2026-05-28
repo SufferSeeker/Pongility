@@ -5,9 +5,11 @@ public class PongilityDebugTool : MonoBehaviour
     #region Variables
     [Header("Debug Values")]
     [SerializeField] private AbilityDefinition SelectedAbility;
+    [SerializeField] private float DebugBallSpeed = 6f;
 
     [Header("Runtime References")]
     [SerializeField] private AbilitySpawner AbilitySpawner;
+    [SerializeField] private BallController BallController;
     [SerializeField] private PlayerAbilityInventory Player1Inventory;
     [SerializeField] private PlayerAbilityInventory Player2Inventory;
     [SerializeField] private MatchManager MatchManager;
@@ -68,10 +70,41 @@ public class PongilityDebugTool : MonoBehaviour
     }
     #endregion
 
+    #region Ball Debug Methods
+    public void StopBall()
+    {
+        if (Application.isPlaying == false) return;
+
+        BallController.DebugStopBall();
+    }
+
+    public void ResumeBall()
+    {
+        if (Application.isPlaying == false) return;
+
+        BallController.DebugResumeBall();
+    }
+
+    public void ResetBallToCenter()
+    {
+        if (Application.isPlaying == false) return;
+
+        BallController.DebugResetBallToCenter();
+    }
+
+    public void SetBallSpeed()
+    {
+        if (Application.isPlaying == false) return;
+
+        BallController.DebugSetBallSpeed(DebugBallSpeed);
+    }
+    #endregion
+
     #region Reference Setup
     private void FindReferences()
     {
         AbilitySpawner = FindFirstObjectByType<AbilitySpawner>();
+        BallController = FindFirstObjectByType<BallController>();
         MatchManager = FindFirstObjectByType<MatchManager>();
 
         PlayerAbilityInventory[] Inventories = FindObjectsByType<PlayerAbilityInventory>(FindObjectsSortMode.None);

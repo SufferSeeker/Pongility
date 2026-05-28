@@ -77,6 +77,7 @@ public class MatchManager : MonoBehaviour
 
     private void OnEnable()
     {
+
         GoalZone.OnGoalScored += HandleGoalScored;
         DamageableTarget.OnTargetDied += HandleTargetDied;
     }

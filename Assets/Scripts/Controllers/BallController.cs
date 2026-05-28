@@ -30,6 +30,7 @@ public class BallController : MonoBehaviour
     [SerializeField] private float DefaultBallSpeed;
     [SerializeField] private float CurrentBallSpeed;
     [SerializeField] private float DynamicSpeedTimer;
+    [SerializeField] private Vector2 DebugSavedMoveDirection;
     #endregion
 
     #region Unity Methods
@@ -47,6 +48,7 @@ public class BallController : MonoBehaviour
 
     private void OnEnable()
     {
+
         MatchManager.OnMatchEnded += HandleMatchEnded;
     }
 
@@ -245,6 +247,59 @@ public class BallController : MonoBehaviour
         BounceHorizontally();
 
         return true;
+    }
+    #endregion
+
+    #region Debug Methods
+    public void DebugStopBall()
+    {
+        if (MoveDirection != Vector2.zero)
+        {
+            DebugSavedMoveDirection = MoveDirection;
+        }
+
+        StopBallMovement();
+
+        Debug.Log("Debug stopped ball.");
+    }
+
+    public void DebugResumeBall()
+    {
+        if (IsMatchFinished == true) return;
+
+        if (DebugSavedMoveDirection != Vector2.zero)
+        {
+            MoveDirection = DebugSavedMoveDirection.normalized;
+        }
+
+        else
+        {
+            LaunchBall();
+        }
+
+        Debug.Log("Debug resumed ball.");
+    }
+
+    public void DebugResetBallToCenter()
+    {
+        if (IsMatchFinished == true) return;
+
+        StopBallMovement();
+        ResetDynamicSpeedProgress();
+
+        transform.position = StartPosition;
+        LastHitSide = MatchSide.None;
+
+        Debug.Log("Debug reset ball to center.");
+    }
+
+    public void DebugSetBallSpeed(float NewBallSpeed)
+    {
+        BallSpeed = NewBallSpeed;
+        DefaultBallSpeed = NewBallSpeed;
+        CurrentBallSpeed = NewBallSpeed;
+
+        Debug.Log("Debug set ball speed to: " + NewBallSpeed);
     }
     #endregion
 

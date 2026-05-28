@@ -42,6 +42,7 @@ public class SelectedMatchSettings : MonoBehaviour
     public Difficulty Difficulty = Difficulty.Easy;
     public BallSpeedMode BallSpeedMode = BallSpeedMode.Fixed;
 
+
     [Header("Match Rules")]
     public int TargetScore = 10;
     public float MatchDurationSeconds = 300f;
