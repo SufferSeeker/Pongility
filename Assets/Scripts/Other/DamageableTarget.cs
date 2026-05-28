@@ -63,6 +63,12 @@ public class DamageableTarget : MonoBehaviour
     {
         if (IsDead == true) return;
 
+        if (CurrentHealth >= MaxHealth)
+        {
+            Debug.Log(TargetSide + " is already at full health.");
+            return;
+        }
+
         CurrentHealth += HealAmount;
 
         if (CurrentHealth > MaxHealth)

@@ -6,13 +6,18 @@ public class PongilityDebugTool : MonoBehaviour
     [Header("Debug Values")]
     [SerializeField] private AbilityDefinition SelectedAbility;
     [SerializeField] private float DebugBallSpeed = 6f;
+    [SerializeField, Min(0)] private int DebugDamageAmount = 20;
+    [SerializeField, Min(0)] private int DebugHealAmount = 20;
 
     [Header("Runtime References")]
     [SerializeField] private AbilitySpawner AbilitySpawner;
     [SerializeField] private BallController BallController;
     [SerializeField] private PlayerAbilityInventory Player1Inventory;
     [SerializeField] private PlayerAbilityInventory Player2Inventory;
+    [SerializeField] private DamageableTarget Player1DamageableTarget;
+    [SerializeField] private DamageableTarget Player2DamageableTarget;
     [SerializeField] private MatchManager MatchManager;
+
     #endregion
 
     #region Unity Methods
@@ -100,6 +105,36 @@ public class PongilityDebugTool : MonoBehaviour
     }
     #endregion
 
+    #region Health Debug Methods
+    public void DamagePlayer1()
+    {
+        if (Application.isPlaying == false) return;
+
+        Player1DamageableTarget.TakeDamage(DebugDamageAmount, MatchSide.Player2);
+    }
+
+    public void DamagePlayer2()
+    {
+        if (Application.isPlaying == false) return;
+
+        Player2DamageableTarget.TakeDamage(DebugDamageAmount, MatchSide.Player1);
+    }
+
+    public void HealPlayer1()
+    {
+        if (Application.isPlaying == false) return;
+
+        Player1DamageableTarget.Heal(DebugHealAmount);
+    }
+
+    public void HealPlayer2()
+    {
+        if (Application.isPlaying == false) return;
+
+        Player2DamageableTarget.Heal(DebugHealAmount);
+    }
+    #endregion
+
     #region Reference Setup
     private void FindReferences()
     {
@@ -119,6 +154,21 @@ public class PongilityDebugTool : MonoBehaviour
             else if (Inventories[i].GetPlayerSide() == MatchSide.Player2)
             {
                 Player2Inventory = Inventories[i];
+            }
+        }
+
+        DamageableTarget[] DamageableTargets = FindObjectsByType<DamageableTarget>(FindObjectsSortMode.None);
+
+        for (int i = 0; i < DamageableTargets.Length; i++)
+        {
+            if (DamageableTargets[i].GetTargetSide() == MatchSide.Player1)
+            {
+                Player1DamageableTarget = DamageableTargets[i];
+            }
+
+            else if (DamageableTargets[i].GetTargetSide() == MatchSide.Player2)
+            {
+                Player2DamageableTarget = DamageableTargets[i];
             }
         }
     }

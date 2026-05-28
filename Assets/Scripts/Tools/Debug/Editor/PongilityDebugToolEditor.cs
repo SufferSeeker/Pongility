@@ -7,11 +7,15 @@ public class PongilityDebugToolEditor : Editor
 {
     private SerializedProperty SelectedAbilityProperty;
     private SerializedProperty DebugBallSpeedProperty;
+    private SerializedProperty DebugDamageAmountProperty;
+    private SerializedProperty DebugHealAmountProperty;
 
     private SerializedProperty AbilitySpawnerProperty;
     private SerializedProperty BallControllerProperty;
     private SerializedProperty Player1InventoryProperty;
     private SerializedProperty Player2InventoryProperty;
+    private SerializedProperty Player1DamageableTargetProperty;
+    private SerializedProperty Player2DamageableTargetProperty;
     private SerializedProperty MatchManagerProperty;
 
     private bool ShowRuntimeReferences;
@@ -20,11 +24,15 @@ public class PongilityDebugToolEditor : Editor
     {
         SelectedAbilityProperty = serializedObject.FindProperty("SelectedAbility");
         DebugBallSpeedProperty = serializedObject.FindProperty("DebugBallSpeed");
+        DebugDamageAmountProperty = serializedObject.FindProperty("DebugDamageAmount");
+        DebugHealAmountProperty = serializedObject.FindProperty("DebugHealAmount");
 
         AbilitySpawnerProperty = serializedObject.FindProperty("AbilitySpawner");
         BallControllerProperty = serializedObject.FindProperty("BallController");
         Player1InventoryProperty = serializedObject.FindProperty("Player1Inventory");
         Player2InventoryProperty = serializedObject.FindProperty("Player2Inventory");
+        Player1DamageableTargetProperty = serializedObject.FindProperty("Player1DamageableTarget");
+        Player2DamageableTargetProperty = serializedObject.FindProperty("Player2DamageableTarget");
         MatchManagerProperty = serializedObject.FindProperty("MatchManager");
     }
 
@@ -48,6 +56,7 @@ public class PongilityDebugToolEditor : Editor
 
         DrawAbilityDebugSection(DebugTool);
         DrawBallDebugSection(DebugTool);
+        DrawHealthDebugSection(DebugTool);
 
         EditorGUI.EndDisabledGroup();
 
@@ -151,6 +160,8 @@ public class PongilityDebugToolEditor : Editor
         EditorGUILayout.PropertyField(BallControllerProperty);
         EditorGUILayout.PropertyField(Player1InventoryProperty);
         EditorGUILayout.PropertyField(Player2InventoryProperty);
+        EditorGUILayout.PropertyField(Player1DamageableTargetProperty);
+        EditorGUILayout.PropertyField(Player2DamageableTargetProperty);
         EditorGUILayout.PropertyField(MatchManagerProperty);
 
         EditorGUI.EndDisabledGroup();
@@ -230,6 +241,51 @@ public class PongilityDebugToolEditor : Editor
         {
             DebugTool.SetBallSpeed();
         }
+    }
+
+    private void DrawHealthDebugSection(PongilityDebugTool DebugTool)
+    {
+        EditorGUILayout.Space(10f);
+        EditorGUILayout.LabelField("Health Debug", EditorStyles.boldLabel);
+
+        EditorGUILayout.PropertyField(DebugDamageAmountProperty);
+        EditorGUILayout.PropertyField(DebugHealAmountProperty);
+
+        EditorGUILayout.BeginHorizontal();
+
+        GUILayout.FlexibleSpace();
+
+        if (GUILayout.Button("Damage Player 1", GUILayout.Width(150f), GUILayout.Height(24f)) == true)
+        {
+            DebugTool.DamagePlayer1();
+        }
+
+        if (GUILayout.Button("Damage Player 2", GUILayout.Width(150f), GUILayout.Height(24f)) == true)
+        {
+            DebugTool.DamagePlayer2();
+        }
+
+        GUILayout.FlexibleSpace();
+
+        EditorGUILayout.EndHorizontal();
+
+        EditorGUILayout.BeginHorizontal();
+
+        GUILayout.FlexibleSpace();
+
+        if (GUILayout.Button("Heal Player 1", GUILayout.Width(150f), GUILayout.Height(24f)) == true)
+        {
+            DebugTool.HealPlayer1();
+        }
+
+        if (GUILayout.Button("Heal Player 2", GUILayout.Width(150f), GUILayout.Height(24f)) == true)
+        {
+            DebugTool.HealPlayer2();
+        }
+
+        GUILayout.FlexibleSpace();
+
+        EditorGUILayout.EndHorizontal();
     }
 
     private bool DrawCenteredButton(string ButtonText)

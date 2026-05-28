@@ -22,6 +22,7 @@ public class HealthBarUI : MonoBehaviour
     #region Unity Methods
     private void Awake()
     {
+
         Target = FindTargetBySide();
         HealthBarFill = transform.Find("Health Bar Fill").GetComponent<Image>();
 

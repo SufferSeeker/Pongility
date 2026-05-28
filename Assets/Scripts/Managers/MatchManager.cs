@@ -65,6 +65,7 @@ public class MatchManager : MonoBehaviour
     #region Unity Methods
     private void Awake()
     {
+
         FindCoreReferences();
         FindRacketReferences();
         FindHealthReferences();
