@@ -2,7 +2,6 @@ using UnityEngine;
 
 public class AbilityLifetime : MonoBehaviour
 {
-
     #region Variables
     [Header("Lifetime Settings")]
     [SerializeField] private float ActiveLifeTime = 6f;

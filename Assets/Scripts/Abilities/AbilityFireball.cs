@@ -67,9 +67,9 @@ public class AbilityFireball : MonoBehaviour, IUsableAbility, IDeflectable
 
         if (CanDamageTarget(Target) == false) return;
 
-        Target.TakeDamage(DamageAmount, OwnerSide);
-
         StartImpact();
+
+        Target.TakeDamage(DamageAmount, OwnerSide);
     }
     #endregion
 
@@ -153,10 +153,13 @@ public class AbilityFireball : MonoBehaviour, IUsableAbility, IDeflectable
     {
         if (IsFrozenByRoundEnd == true) return;
 
-        IsFrozenByRoundEnd = true;
         CanMove = false;
 
         FireballCollider.enabled = false;
+
+        if (HasImpacted == true) return;
+        
+        IsFrozenByRoundEnd = true;
 
         FireballAnimator.speed = 0f;
     }
