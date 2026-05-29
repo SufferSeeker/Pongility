@@ -65,6 +65,7 @@ public class MatchManager : MonoBehaviour
     #region Unity Methods
     private void Awake()
     {
+
         FindCoreReferences();
         FindRacketReferences();
         FindHealthReferences();
@@ -127,12 +128,12 @@ public class MatchManager : MonoBehaviour
         StartCoroutine(RoundResetRoutine(false));
     }
 
-    private void HandleTargetDied(MatchSide DeadSide, MatchSide KillerSide)
+    private void HandleTargetDied(MatchSide DeadSide, DamageInfo DeathDamageInfo)
     {
         if (IsMatchFinished == true) return;
         if (IsRoundResetting == true) return;
 
-        StartCoroutine(HandleTargetDiedRoutine(DeadSide, KillerSide));
+        StartCoroutine(HandleTargetDiedRoutine(DeadSide, DeathDamageInfo));
     }
     #endregion
 
@@ -158,14 +159,14 @@ public class MatchManager : MonoBehaviour
         IsRoundResetting = false;
     }
 
-    private IEnumerator HandleTargetDiedRoutine(MatchSide DeadSide, MatchSide KillerSide)
+    private IEnumerator HandleTargetDiedRoutine(MatchSide DeadSide, DamageInfo DeathDamageInfo)
     {
-        AddScore(KillerSide);
+        AddScore(DeathDamageInfo.DamageOwnerSide);
 
         UpdateScoreTexts();
         CheckMatchEndByScore();
 
-        Debug.Log(DeadSide + " died. Score rewarded to: " + KillerSide);
+        Debug.Log(DeadSide + " died. Score rewarded to: " + DeathDamageInfo.DamageOwnerSide);
 
         if (IsMatchFinished == true) yield break;
 

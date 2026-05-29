@@ -4,7 +4,7 @@ using UnityEngine;
 public class DamageableTarget : MonoBehaviour
 {
     #region Events
-    public static event Action<MatchSide, MatchSide> OnTargetDied;
+    public static event Action<MatchSide, DamageInfo> OnTargetDied;
     public event Action<int, int> OnHealthChanged;
     #endregion
 
@@ -23,6 +23,7 @@ public class DamageableTarget : MonoBehaviour
     #region Unity Methods
     private void Awake()
     {
+
         CurrentHealth = MaxHealth;
         IsDead = false;
 
@@ -38,11 +39,11 @@ public class DamageableTarget : MonoBehaviour
     #endregion
 
     #region Health Methods
-    public void TakeDamage(int DamageAmount, MatchSide DamageOwnerSide)
+    public void TakeDamage(DamageInfo NewDamageInfo)
     {
         if (IsDead == true) return;
 
-        CurrentHealth -= DamageAmount;
+        CurrentHealth -= NewDamageInfo.DamageAmount;
 
         if (CurrentHealth < 0)
         {
@@ -51,11 +52,11 @@ public class DamageableTarget : MonoBehaviour
 
         OnHealthChanged?.Invoke(CurrentHealth, MaxHealth);
 
-        Debug.Log(TargetSide + " took " + DamageAmount + " damage from " + DamageOwnerSide + ". Current Health: " + CurrentHealth);
+        Debug.Log(TargetSide + " took " + NewDamageInfo.DamageAmount + " damage from " + NewDamageInfo.DamageOwnerSide + ". Current Health: " + CurrentHealth);
 
         if (CurrentHealth <= 0)
         {
-            Die(DamageOwnerSide);
+            Die(NewDamageInfo);
         }
     }
 
@@ -93,15 +94,15 @@ public class DamageableTarget : MonoBehaviour
     #endregion
 
     #region Death Logic
-    private void Die(MatchSide DamageOwnerSide)
+    private void Die(DamageInfo DeathDamageInfo)
     {
         if (IsDead == true) return;
 
         IsDead = true;
 
-        Debug.Log(TargetSide + " died. Killer: " + DamageOwnerSide);
+        Debug.Log(TargetSide + " died. Killer: " + DeathDamageInfo.DamageOwnerSide);
 
-        OnTargetDied?.Invoke(TargetSide, DamageOwnerSide);
+        OnTargetDied?.Invoke(TargetSide, DeathDamageInfo);
     }
     #endregion
 }

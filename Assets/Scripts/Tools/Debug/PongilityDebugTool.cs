@@ -18,12 +18,12 @@ public class PongilityDebugTool : MonoBehaviour
     [SerializeField] private DamageableTarget Player1DamageableTarget;
     [SerializeField] private DamageableTarget Player2DamageableTarget;
     [SerializeField] private MatchManager MatchManager;
-
     #endregion
 
     #region Unity Methods
     private void Awake()
     {
+
         FindReferences();
     }
     #endregion
@@ -31,7 +31,6 @@ public class PongilityDebugTool : MonoBehaviour
     #region Ability Debug Methods
     public void SpawnSelectedAbilityPickup()
     {
-
         if (Application.isPlaying == false) return;
 
         if (SelectedAbility == null)
@@ -112,14 +111,18 @@ public class PongilityDebugTool : MonoBehaviour
     {
         if (Application.isPlaying == false) return;
 
-        Player1DamageableTarget.TakeDamage(DebugDamageAmount, MatchSide.Player2);
+        DamageInfo NewDamageInfo = CreateDebugDamageInfo(MatchSide.Player2);
+
+        Player1DamageableTarget.TakeDamage(NewDamageInfo);
     }
 
     public void DamagePlayer2()
     {
         if (Application.isPlaying == false) return;
 
-        Player2DamageableTarget.TakeDamage(DebugDamageAmount, MatchSide.Player1);
+        DamageInfo NewDamageInfo = CreateDebugDamageInfo(MatchSide.Player1);
+
+        Player2DamageableTarget.TakeDamage(NewDamageInfo);
     }
 
     public void HealPlayer1()
@@ -134,6 +137,19 @@ public class PongilityDebugTool : MonoBehaviour
         if (Application.isPlaying == false) return;
 
         Player2DamageableTarget.Heal(DebugHealAmount);
+    }
+
+    private DamageInfo CreateDebugDamageInfo(MatchSide DamageOwnerSide)
+    {
+        DamageInfo NewDamageInfo = new DamageInfo(
+            DebugDamageAmount,
+            DamageOwnerSide,
+            DamageSourceType.Debug,
+            HitVisualType.Generic,
+            DeathVisualType.Debug
+        );
+
+        return NewDamageInfo;
     }
     #endregion
 

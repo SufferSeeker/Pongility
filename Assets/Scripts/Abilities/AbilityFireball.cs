@@ -18,6 +18,9 @@ public class AbilityFireball : MonoBehaviour, IUsableAbility, IDeflectable
 
     [Header("Damage Settings")]
     [SerializeField] private int DamageAmount = 20;
+    [SerializeField] private DamageSourceType DamageSourceType = DamageSourceType.Ability;
+    [SerializeField] private HitVisualType HitVisualType = HitVisualType.Fire;
+    [SerializeField] private DeathVisualType DeathVisualType = DeathVisualType.FireballBurn;
 
     [Header("State")]
     [SerializeField] private MatchSide OwnerSide;
@@ -29,6 +32,7 @@ public class AbilityFireball : MonoBehaviour, IUsableAbility, IDeflectable
     #region Unity Methods
     private void Awake()
     {
+
         FireballAnimator = GetComponent<Animator>();
         FireballCollider = GetComponent<Collider2D>();
 
@@ -69,7 +73,9 @@ public class AbilityFireball : MonoBehaviour, IUsableAbility, IDeflectable
 
         StartImpact();
 
-        Target.TakeDamage(DamageAmount, OwnerSide);
+        DamageInfo NewDamageInfo = CreateDamageInfo();
+
+        Target.TakeDamage(NewDamageInfo);
     }
     #endregion
 
@@ -116,6 +122,19 @@ public class AbilityFireball : MonoBehaviour, IUsableAbility, IDeflectable
         if (Target.GetTargetSide() == OwnerSide) return false;
 
         return true;
+    }
+
+    private DamageInfo CreateDamageInfo()
+    {
+        DamageInfo NewDamageInfo = new DamageInfo(
+            DamageAmount,
+            OwnerSide,
+            DamageSourceType,
+            HitVisualType,
+            DeathVisualType
+        );
+
+        return NewDamageInfo;
     }
 
     private void StartImpact()

@@ -36,6 +36,7 @@ public class BallController : MonoBehaviour
     #region Unity Methods
     private void Awake()
     {
+
         SelectedMatchSettings = FindFirstObjectByType<SelectedMatchSettings>();
 
         StartPosition = transform.position;
