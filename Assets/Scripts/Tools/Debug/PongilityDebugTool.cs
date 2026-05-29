@@ -8,6 +8,7 @@ public class PongilityDebugTool : MonoBehaviour
     [SerializeField] private float DebugBallSpeed = 6f;
     [SerializeField, Min(0)] private int DebugDamageAmount = 20;
     [SerializeField, Min(0)] private int DebugHealAmount = 20;
+    [SerializeField, Min(0f)] private float DebugTimeAmountSeconds = 30f;
 
     [Header("Runtime References")]
     [SerializeField] private AbilitySpawner AbilitySpawner;
@@ -30,6 +31,7 @@ public class PongilityDebugTool : MonoBehaviour
     #region Ability Debug Methods
     public void SpawnSelectedAbilityPickup()
     {
+
         if (Application.isPlaying == false) return;
 
         if (SelectedAbility == null)
@@ -132,6 +134,67 @@ public class PongilityDebugTool : MonoBehaviour
         if (Application.isPlaying == false) return;
 
         Player2DamageableTarget.Heal(DebugHealAmount);
+    }
+    #endregion
+
+    #region Match Debug Methods
+    public void ResetRound()
+    {
+        if (Application.isPlaying == false) return;
+
+        MatchManager.DebugResetRound();
+    }
+
+    public void EndMatch()
+    {
+        if (Application.isPlaying == false) return;
+
+        MatchManager.DebugEndMatch();
+    }
+
+    public void AddScoreToPlayer1()
+    {
+        if (Application.isPlaying == false) return;
+
+        MatchManager.DebugAddScoreToPlayer1();
+    }
+
+    public void AddScoreToPlayer2()
+    {
+        if (Application.isPlaying == false) return;
+
+        MatchManager.DebugAddScoreToPlayer2();
+    }
+
+    public void AddTime()
+    {
+        if (Application.isPlaying == false) return;
+
+        MatchManager.DebugAddTime(DebugTimeAmountSeconds);
+    }
+
+    public void DecreaseTime()
+    {
+        if (Application.isPlaying == false) return;
+
+        MatchManager.DebugDecreaseTime(DebugTimeAmountSeconds);
+    }
+
+    public void SetTime()
+    {
+        if (Application.isPlaying == false) return;
+
+        MatchManager.DebugSetTime(DebugTimeAmountSeconds);
+    }
+
+    public bool HasTimeLimit()
+    {
+        if (Application.isPlaying == false)
+        {
+            return true;
+        }
+
+        return MatchManager.DebugHasTimeLimit();
     }
     #endregion
 

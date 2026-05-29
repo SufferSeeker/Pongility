@@ -35,6 +35,7 @@ public enum MatchSide
 
 public class SelectedMatchSettings : MonoBehaviour
 {
+
     #region Variables
     [Header("Game Settings")]
     public GameMode GameMode = GameMode.Singleplayer;

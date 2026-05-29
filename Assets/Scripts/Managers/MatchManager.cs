@@ -65,7 +65,6 @@ public class MatchManager : MonoBehaviour
     #region Unity Methods
     private void Awake()
     {
-
         FindCoreReferences();
         FindRacketReferences();
         FindHealthReferences();
@@ -78,7 +77,6 @@ public class MatchManager : MonoBehaviour
 
     private void OnEnable()
     {
-
         GoalZone.OnGoalScored += HandleGoalScored;
         DamageableTarget.OnTargetDied += HandleTargetDied;
     }
@@ -410,6 +408,107 @@ public class MatchManager : MonoBehaviour
         OnRoundCleanupRequested?.Invoke();
 
         Debug.Log("Debug requested ability object cleanup.");
+    }
+
+    public void DebugResetRound()
+    {
+        if (IsMatchFinished == true) return;
+        if (IsRoundResetting == true) return;
+
+        StartCoroutine(RoundResetRoutine(false));
+
+        Debug.Log("Debug requested round reset.");
+    }
+
+    public void DebugEndMatch()
+    {
+        if (IsMatchFinished == true) return;
+
+        EndMatch();
+
+        Debug.Log("Debug requested match end.");
+    }
+
+    public void DebugAddScoreToPlayer1()
+    {
+        DebugAddScore(MatchSide.Player1);
+    }
+
+    public void DebugAddScoreToPlayer2()
+    {
+        DebugAddScore(MatchSide.Player2);
+    }
+
+    public void DebugAddTime(float Seconds)
+    {
+        if (IsMatchFinished == true) return;
+        if (DebugHasTimeLimit() == false) return;
+
+        RemainingTime += Seconds;
+
+        UpdateTimeText();
+
+        Debug.Log("Debug added time: " + Seconds + " seconds.");
+    }
+
+    public void DebugDecreaseTime(float Seconds)
+    {
+        if (IsMatchFinished == true) return;
+        if (DebugHasTimeLimit() == false) return;
+
+        RemainingTime -= Seconds;
+
+        if (RemainingTime < 0f)
+        {
+            RemainingTime = 0f;
+        }
+
+        UpdateTimeText();
+        CheckMatchEndByTime();
+
+        Debug.Log("Debug decreased time: " + Seconds + " seconds.");
+    }
+
+    public void DebugSetTime(float Seconds)
+    {
+        if (IsMatchFinished == true) return;
+        if (DebugHasTimeLimit() == false) return;
+
+        RemainingTime = Seconds;
+
+        if (RemainingTime < 0f)
+        {
+            RemainingTime = 0f;
+        }
+
+        UpdateTimeText();
+        CheckMatchEndByTime();
+
+        Debug.Log("Debug set time to: " + RemainingTime + " seconds.");
+    }
+
+    public bool DebugHasTimeLimit()
+    {
+        if (SelectedMatchSettings.MatchDurationSeconds == 0f) return false;
+        
+        return true;
+    }
+
+    private void DebugAddScore(MatchSide ScoringSide)
+    {
+        if (IsMatchFinished == true) return;
+        if (IsRoundResetting == true) return;
+
+        AddScore(ScoringSide);
+
+        UpdateScoreTexts();
+        CheckMatchEndByScore();
+
+        Debug.Log("Debug added score to: " + ScoringSide);
+
+        if (IsMatchFinished == true) return;
+
+        StartCoroutine(RoundResetRoutine(false));
     }
     #endregion
 

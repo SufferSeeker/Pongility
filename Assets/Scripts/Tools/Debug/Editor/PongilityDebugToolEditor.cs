@@ -9,6 +9,7 @@ public class PongilityDebugToolEditor : Editor
     private SerializedProperty DebugBallSpeedProperty;
     private SerializedProperty DebugDamageAmountProperty;
     private SerializedProperty DebugHealAmountProperty;
+    private SerializedProperty DebugTimeAmountSecondsProperty;
 
     private SerializedProperty AbilitySpawnerProperty;
     private SerializedProperty BallControllerProperty;
@@ -26,6 +27,7 @@ public class PongilityDebugToolEditor : Editor
         DebugBallSpeedProperty = serializedObject.FindProperty("DebugBallSpeed");
         DebugDamageAmountProperty = serializedObject.FindProperty("DebugDamageAmount");
         DebugHealAmountProperty = serializedObject.FindProperty("DebugHealAmount");
+        DebugTimeAmountSecondsProperty = serializedObject.FindProperty("DebugTimeAmountSeconds");
 
         AbilitySpawnerProperty = serializedObject.FindProperty("AbilitySpawner");
         BallControllerProperty = serializedObject.FindProperty("BallController");
@@ -57,6 +59,7 @@ public class PongilityDebugToolEditor : Editor
         DrawAbilityDebugSection(DebugTool);
         DrawBallDebugSection(DebugTool);
         DrawHealthDebugSection(DebugTool);
+        DrawMatchDebugSection(DebugTool);
 
         EditorGUI.EndDisabledGroup();
 
@@ -283,9 +286,94 @@ public class PongilityDebugToolEditor : Editor
             DebugTool.HealPlayer2();
         }
 
+
         GUILayout.FlexibleSpace();
 
         EditorGUILayout.EndHorizontal();
+    }
+
+    private void DrawMatchDebugSection(PongilityDebugTool DebugTool)
+    {
+        EditorGUILayout.Space(10f);
+        EditorGUILayout.LabelField("Match Debug", EditorStyles.boldLabel);
+
+        EditorGUILayout.BeginHorizontal();
+
+        GUILayout.FlexibleSpace();
+
+        if (GUILayout.Button("Reset Round", GUILayout.Width(150f), GUILayout.Height(24f)) == true)
+        {
+            DebugTool.ResetRound();
+        }
+
+        if (GUILayout.Button("End Match", GUILayout.Width(150f), GUILayout.Height(24f)) == true)
+        {
+            DebugTool.EndMatch();
+        }
+
+        GUILayout.FlexibleSpace();
+
+        EditorGUILayout.EndHorizontal();
+
+        EditorGUILayout.Space(4f);
+        EditorGUILayout.LabelField("Score Debug", EditorStyles.boldLabel);
+
+        EditorGUILayout.BeginHorizontal();
+
+        GUILayout.FlexibleSpace();
+
+        if (GUILayout.Button("Add Score To Player 1", GUILayout.Width(150f), GUILayout.Height(24f)) == true)
+        {
+            DebugTool.AddScoreToPlayer1();
+        }
+
+        if (GUILayout.Button("Add Score To Player 2", GUILayout.Width(150f), GUILayout.Height(24f)) == true)
+        {
+            DebugTool.AddScoreToPlayer2();
+        }
+
+        GUILayout.FlexibleSpace();
+
+        EditorGUILayout.EndHorizontal();
+
+        EditorGUILayout.Space(4f);
+        EditorGUILayout.LabelField("Time Debug", EditorStyles.boldLabel);
+
+        EditorGUILayout.PropertyField(DebugTimeAmountSecondsProperty);
+
+        bool HasTimeLimit = DebugTool.HasTimeLimit();
+
+        if (HasTimeLimit == false)
+        {
+            EditorGUILayout.HelpBox("Time debug commands are disabled because this match has no time limit.", MessageType.Info);
+        }
+
+        EditorGUI.BeginDisabledGroup(HasTimeLimit == false);
+
+        EditorGUILayout.BeginHorizontal();
+
+        GUILayout.FlexibleSpace();
+
+        if (GUILayout.Button("Add Time", GUILayout.Width(100f), GUILayout.Height(24f)) == true)
+        {
+            DebugTool.AddTime();
+        }
+
+        if (GUILayout.Button("Decrease Time", GUILayout.Width(100f), GUILayout.Height(24f)) == true)
+        {
+            DebugTool.DecreaseTime();
+        }
+
+        if (GUILayout.Button("Set Time", GUILayout.Width(100f), GUILayout.Height(24f)) == true)
+        {
+            DebugTool.SetTime();
+        }
+
+        GUILayout.FlexibleSpace();
+
+        EditorGUILayout.EndHorizontal();
+
+        EditorGUI.EndDisabledGroup();
     }
 
     private bool DrawCenteredButton(string ButtonText)
