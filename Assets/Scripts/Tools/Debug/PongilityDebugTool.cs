@@ -145,7 +145,6 @@ public class PongilityDebugTool : MonoBehaviour
             DebugDamageAmount,
             DamageOwnerSide,
             DamageSourceType.Debug,
-            HitVisualType.Generic,
             DeathVisualType.Debug
         );
 

@@ -247,6 +247,7 @@ MonoBehaviour:
   DebugBallSpeed: 6
   DebugDamageAmount: 20
   DebugHealAmount: 20
+  DebugTimeAmountSeconds: 30
   AbilitySpawner: {fileID: 0}
   BallController: {fileID: 0}
   Player1Inventory: {fileID: 0}

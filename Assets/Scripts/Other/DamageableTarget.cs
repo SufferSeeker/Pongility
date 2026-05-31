@@ -6,6 +6,8 @@ public class DamageableTarget : MonoBehaviour
     #region Events
     public static event Action<MatchSide, DamageInfo> OnTargetDied;
     public event Action<int, int> OnHealthChanged;
+    public event Action OnHitVisualRequested;
+    public event Action<DamageInfo> OnDeathVisualRequested;
     #endregion
 
     #region Variables
@@ -57,7 +59,10 @@ public class DamageableTarget : MonoBehaviour
         if (CurrentHealth <= 0)
         {
             Die(NewDamageInfo);
+            return;
         }
+
+        OnHitVisualRequested?.Invoke();
     }
 
     public void Heal(int HealAmount)
@@ -99,6 +104,8 @@ public class DamageableTarget : MonoBehaviour
         if (IsDead == true) return;
 
         IsDead = true;
+
+        OnDeathVisualRequested?.Invoke(DeathDamageInfo);
 
         Debug.Log(TargetSide + " died. Killer: " + DeathDamageInfo.DamageOwnerSide);
 

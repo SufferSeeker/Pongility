@@ -42,10 +42,12 @@ GameObject:
   - component: {fileID: 2703427803343900498}
   - component: {fileID: 6374655887021596769}
   - component: {fileID: 4524270804247898119}
+  - component: {fileID: 7951771153452852357}
   - component: {fileID: 600764108284853189}
   - component: {fileID: 8332115788114341107}
   - component: {fileID: 8152035385753049870}
   - component: {fileID: 7745217063271866054}
+  - component: {fileID: 8084154263393072171}
   m_Layer: 0
   m_Name: Player Racket 2
   m_TagString: Player
@@ -170,6 +172,27 @@ BoxCollider2D:
   serializedVersion: 2
   m_Size: {x: 1.25, y: 0.4}
   m_EdgeRadius: 0
+--- !u!95 &7951771153452852357
+Animator:
+  serializedVersion: 5
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1452770745542540880}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 22100000, guid: ec302cbe78c82d741b5418363032f295, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0
 --- !u!114 &600764108284853189
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -234,6 +257,43 @@ MonoBehaviour:
   MaxHealth: 100
   CurrentHealth: 0
   IsDead: 0
+--- !u!114 &8084154263393072171
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1452770745542540880}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f79fb1390d3a0bb4fb38c94fdafaf5ca, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  RacketAnimator: {fileID: 0}
+  RacketSpriteRenderer: {fileID: 0}
+  DamageableTarget: {fileID: 0}
+  DeathVisualTriggerBindings:
+  - DeathVisualType: 1
+    TriggerName: GenericDeath
+  - DeathVisualType: 2
+    TriggerName: FireballBurnDeath
+  - DeathVisualType: 3
+    TriggerName: PoisonMeltDeath
+  - DeathVisualType: 4
+    TriggerName: FreezeShatterDeath
+  - DeathVisualType: 5
+    TriggerName: JudgementLightDeath
+  - DeathVisualType: 6
+    TriggerName: BurningBallScorchDeath
+  - DeathVisualType: 7
+    TriggerName: DebugDeath
+  HitFlashMaterial: {fileID: 2100000, guid: a4592c8ce3676394f99aab0002ac7f44, type: 2}
+  HitFlashCount: 3
+  HitFlashOnDuration: 0.1
+  HitFlashOffDuration: 0.1
+  OriginalColor: {r: 1, g: 1, b: 1, a: 0}
+  OriginalMaterial: {fileID: 0}
+  LogMissingAnimatorMessages: 1
 --- !u!1 &2121459988588404913
 GameObject:
   m_ObjectHideFlags: 0

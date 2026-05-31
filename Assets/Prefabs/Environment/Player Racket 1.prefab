@@ -11,9 +11,11 @@ GameObject:
   - component: {fileID: 838028241859072846}
   - component: {fileID: 6399214296622832680}
   - component: {fileID: 1071622901741736687}
+  - component: {fileID: 5144179511367012876}
   - component: {fileID: 6558492388201077248}
   - component: {fileID: 6027637233577730705}
   - component: {fileID: 2826126124173849467}
+  - component: {fileID: 3554695845482225999}
   m_Layer: 0
   m_Name: Player Racket 1
   m_TagString: Player
@@ -87,7 +89,7 @@ SpriteRenderer:
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
-  m_Size: {x: 1, y: 1}
+  m_Size: {x: 2, y: 1}
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 1
@@ -130,7 +132,7 @@ BoxCollider2D:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0.5, y: 0.5}
     oldSize: {x: 2, y: 1}
-    newSize: {x: 1, y: 1}
+    newSize: {x: 2, y: 1}
     adaptiveTilingThreshold: 0.5
     drawMode: 0
     adaptiveTiling: 0
@@ -138,6 +140,27 @@ BoxCollider2D:
   serializedVersion: 2
   m_Size: {x: 1.25, y: 0.4}
   m_EdgeRadius: 0
+--- !u!95 &5144179511367012876
+Animator:
+  serializedVersion: 5
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 339426058460707613}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 22100000, guid: 910fc3b7a2b3f69419b754dbe89fcb99, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0
 --- !u!114 &6558492388201077248
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -185,6 +208,43 @@ MonoBehaviour:
   MaxHealth: 100
   CurrentHealth: 0
   IsDead: 0
+--- !u!114 &3554695845482225999
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 339426058460707613}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f79fb1390d3a0bb4fb38c94fdafaf5ca, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  RacketAnimator: {fileID: 0}
+  RacketSpriteRenderer: {fileID: 0}
+  DamageableTarget: {fileID: 0}
+  DeathVisualTriggerBindings:
+  - DeathVisualType: 1
+    TriggerName: GenericDeath
+  - DeathVisualType: 2
+    TriggerName: FireballBurnDeath
+  - DeathVisualType: 3
+    TriggerName: PoisonMeltDeath
+  - DeathVisualType: 4
+    TriggerName: FreezeShatterDeath
+  - DeathVisualType: 5
+    TriggerName: JudgementLightDeath
+  - DeathVisualType: 6
+    TriggerName: BurningBallScorchDeath
+  - DeathVisualType: 7
+    TriggerName: DebugDeath
+  HitFlashMaterial: {fileID: 2100000, guid: a4592c8ce3676394f99aab0002ac7f44, type: 2}
+  HitFlashCount: 3
+  HitFlashOnDuration: 0.1
+  HitFlashOffDuration: 0.1
+  OriginalColor: {r: 1, g: 1, b: 1, a: 0}
+  OriginalMaterial: {fileID: 0}
+  LogMissingAnimatorMessages: 1
 --- !u!1 &495601082857816229
 GameObject:
   m_ObjectHideFlags: 0

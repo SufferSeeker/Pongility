@@ -19,7 +19,6 @@ public class AbilityFireball : MonoBehaviour, IUsableAbility, IDeflectable
     [Header("Damage Settings")]
     [SerializeField] private int DamageAmount = 20;
     [SerializeField] private DamageSourceType DamageSourceType = DamageSourceType.Ability;
-    [SerializeField] private HitVisualType HitVisualType = HitVisualType.Fire;
     [SerializeField] private DeathVisualType DeathVisualType = DeathVisualType.FireballBurn;
 
     [Header("State")]
@@ -130,7 +129,6 @@ public class AbilityFireball : MonoBehaviour, IUsableAbility, IDeflectable
             DamageAmount,
             OwnerSide,
             DamageSourceType,
-            HitVisualType,
             DeathVisualType
         );
 
