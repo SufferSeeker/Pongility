@@ -6,6 +6,7 @@ using UnityEngine;
 public class PongilityDebugToolEditor : Editor
 {
     private SerializedProperty SelectedAbilityProperty;
+    private SerializedProperty SelectedStatusEffectProperty;
     private SerializedProperty DebugBallSpeedProperty;
     private SerializedProperty DebugDamageAmountProperty;
     private SerializedProperty DebugHealAmountProperty;
@@ -17,6 +18,8 @@ public class PongilityDebugToolEditor : Editor
     private SerializedProperty Player2InventoryProperty;
     private SerializedProperty Player1DamageableTargetProperty;
     private SerializedProperty Player2DamageableTargetProperty;
+    private SerializedProperty Player1StatusEffectReceiverProperty;
+    private SerializedProperty Player2StatusEffectReceiverProperty;
     private SerializedProperty MatchManagerProperty;
 
     private bool ShowRuntimeReferences;
@@ -24,6 +27,7 @@ public class PongilityDebugToolEditor : Editor
     private void OnEnable()
     {
         SelectedAbilityProperty = serializedObject.FindProperty("SelectedAbility");
+        SelectedStatusEffectProperty = serializedObject.FindProperty("SelectedStatusEffect");
         DebugBallSpeedProperty = serializedObject.FindProperty("DebugBallSpeed");
         DebugDamageAmountProperty = serializedObject.FindProperty("DebugDamageAmount");
         DebugHealAmountProperty = serializedObject.FindProperty("DebugHealAmount");
@@ -35,6 +39,8 @@ public class PongilityDebugToolEditor : Editor
         Player2InventoryProperty = serializedObject.FindProperty("Player2Inventory");
         Player1DamageableTargetProperty = serializedObject.FindProperty("Player1DamageableTarget");
         Player2DamageableTargetProperty = serializedObject.FindProperty("Player2DamageableTarget");
+        Player1StatusEffectReceiverProperty = serializedObject.FindProperty("Player1StatusEffectReceiver");
+        Player2StatusEffectReceiverProperty = serializedObject.FindProperty("Player2StatusEffectReceiver");
         MatchManagerProperty = serializedObject.FindProperty("MatchManager");
     }
 
@@ -59,6 +65,7 @@ public class PongilityDebugToolEditor : Editor
         DrawAbilityDebugSection(DebugTool);
         DrawBallDebugSection(DebugTool);
         DrawHealthDebugSection(DebugTool);
+        DrawStatusEffectDebugSection(DebugTool);
         DrawMatchDebugSection(DebugTool);
 
         EditorGUI.EndDisabledGroup();
@@ -71,6 +78,8 @@ public class PongilityDebugToolEditor : Editor
         EditorGUILayout.LabelField("Debug Values", EditorStyles.boldLabel);
 
         DrawAbilityDropdown();
+
+        EditorGUILayout.PropertyField(SelectedStatusEffectProperty);
     }
 
     private void DrawAbilityDropdown()
@@ -165,6 +174,8 @@ public class PongilityDebugToolEditor : Editor
         EditorGUILayout.PropertyField(Player2InventoryProperty);
         EditorGUILayout.PropertyField(Player1DamageableTargetProperty);
         EditorGUILayout.PropertyField(Player2DamageableTargetProperty);
+        EditorGUILayout.PropertyField(Player1StatusEffectReceiverProperty);
+        EditorGUILayout.PropertyField(Player2StatusEffectReceiverProperty);
         EditorGUILayout.PropertyField(MatchManagerProperty);
 
         EditorGUI.EndDisabledGroup();
@@ -286,6 +297,30 @@ public class PongilityDebugToolEditor : Editor
             DebugTool.HealPlayer2();
         }
 
+
+        GUILayout.FlexibleSpace();
+
+        EditorGUILayout.EndHorizontal();
+    }
+
+    private void DrawStatusEffectDebugSection(PongilityDebugTool DebugTool)
+    {
+        EditorGUILayout.Space(10f);
+        EditorGUILayout.LabelField("Status Effect Debug", EditorStyles.boldLabel);
+
+        EditorGUILayout.BeginHorizontal();
+
+        GUILayout.FlexibleSpace();
+
+        if (GUILayout.Button("Apply To Player 1", GUILayout.Width(150f), GUILayout.Height(24f)) == true)
+        {
+            DebugTool.ApplySelectedStatusEffectToPlayer1();
+        }
+
+        if (GUILayout.Button("Apply To Player 2", GUILayout.Width(150f), GUILayout.Height(24f)) == true)
+        {
+            DebugTool.ApplySelectedStatusEffectToPlayer2();
+        }
 
         GUILayout.FlexibleSpace();
 

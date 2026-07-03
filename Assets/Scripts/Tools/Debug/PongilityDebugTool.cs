@@ -5,6 +5,7 @@ public class PongilityDebugTool : MonoBehaviour
     #region Variables
     [Header("Debug Values")]
     [SerializeField] private AbilityDefinition SelectedAbility;
+    [SerializeField] private StatusEffectDefinition SelectedStatusEffect;
     [SerializeField] private float DebugBallSpeed = 6f;
     [SerializeField, Min(0)] private int DebugDamageAmount = 20;
     [SerializeField, Min(0)] private int DebugHealAmount = 20;
@@ -17,13 +18,14 @@ public class PongilityDebugTool : MonoBehaviour
     [SerializeField] private PlayerAbilityInventory Player2Inventory;
     [SerializeField] private DamageableTarget Player1DamageableTarget;
     [SerializeField] private DamageableTarget Player2DamageableTarget;
+    [SerializeField] private StatusEffectReceiver Player1StatusEffectReceiver;
+    [SerializeField] private StatusEffectReceiver Player2StatusEffectReceiver;
     [SerializeField] private MatchManager MatchManager;
     #endregion
 
     #region Unity Methods
     private void Awake()
     {
-
         FindReferences();
     }
     #endregion
@@ -152,6 +154,34 @@ public class PongilityDebugTool : MonoBehaviour
     }
     #endregion
 
+    #region Status Effect Debug Methods
+    public void ApplySelectedStatusEffectToPlayer1()
+    {
+        if (Application.isPlaying == false) return;
+
+        if (SelectedStatusEffect == null)
+        {
+            Debug.Log("No selected status effect assigned.");
+            return;
+        }
+
+        Player1StatusEffectReceiver.ApplyStatusEffect(SelectedStatusEffect, MatchSide.Player2);
+    }
+
+    public void ApplySelectedStatusEffectToPlayer2()
+    {
+        if (Application.isPlaying == false) return;
+
+        if (SelectedStatusEffect == null)
+        {
+            Debug.Log("No selected status effect assigned.");
+            return;
+        }
+
+        Player2StatusEffectReceiver.ApplyStatusEffect(SelectedStatusEffect, MatchSide.Player1);
+    }
+    #endregion
+
     #region Match Debug Methods
     public void ResetRound()
     {
@@ -242,11 +272,13 @@ public class PongilityDebugTool : MonoBehaviour
             if (DamageableTargets[i].GetTargetSide() == MatchSide.Player1)
             {
                 Player1DamageableTarget = DamageableTargets[i];
+                Player1StatusEffectReceiver = DamageableTargets[i].GetComponent<StatusEffectReceiver>();
             }
 
             else if (DamageableTargets[i].GetTargetSide() == MatchSide.Player2)
             {
                 Player2DamageableTarget = DamageableTargets[i];
+                Player2StatusEffectReceiver = DamageableTargets[i].GetComponent<StatusEffectReceiver>();
             }
         }
     }

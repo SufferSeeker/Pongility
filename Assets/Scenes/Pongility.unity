@@ -244,6 +244,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   SelectedAbility: {fileID: 0}
+  SelectedStatusEffect: {fileID: 11400000, guid: 9dbb39aeb41330f498febfc79fda628f, type: 2}
   DebugBallSpeed: 6
   DebugDamageAmount: 20
   DebugHealAmount: 20
@@ -254,6 +255,8 @@ MonoBehaviour:
   Player2Inventory: {fileID: 0}
   Player1DamageableTarget: {fileID: 0}
   Player2DamageableTarget: {fileID: 0}
+  Player1StatusEffectReceiver: {fileID: 0}
+  Player2StatusEffectReceiver: {fileID: 0}
   MatchManager: {fileID: 0}
 --- !u!1 &117553658
 GameObject:

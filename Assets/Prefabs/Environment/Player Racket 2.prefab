@@ -48,6 +48,7 @@ GameObject:
   - component: {fileID: 8152035385753049870}
   - component: {fileID: 7745217063271866054}
   - component: {fileID: 8084154263393072171}
+  - component: {fileID: 3650184215953972944}
   m_Layer: 0
   m_Name: Player Racket 2
   m_TagString: Player
@@ -294,6 +295,20 @@ MonoBehaviour:
   OriginalColor: {r: 1, g: 1, b: 1, a: 0}
   OriginalMaterial: {fileID: 0}
   LogMissingAnimatorMessages: 1
+--- !u!114 &3650184215953972944
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1452770745542540880}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c24f171391333bb47b9d078f82eb45e9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  DamageableTarget: {fileID: 0}
+  ActiveStatusEffectCount: 0
 --- !u!1 &2121459988588404913
 GameObject:
   m_ObjectHideFlags: 0
