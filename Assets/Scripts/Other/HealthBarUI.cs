@@ -1,4 +1,5 @@
 using System.Collections;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -11,6 +12,7 @@ public class HealthBarUI : MonoBehaviour
     [Header("References")]
     [SerializeField] private DamageableTarget Target;
     [SerializeField] private Image HealthBarFill;
+    [SerializeField] private TextMeshProUGUI HealthText;
 
     [Header("Smooth Settings")]
     [SerializeField] private float FillDuration = 0.35f;
@@ -22,9 +24,9 @@ public class HealthBarUI : MonoBehaviour
     #region Unity Methods
     private void Awake()
     {
-
         Target = FindTargetBySide();
         HealthBarFill = transform.Find("Health Bar Fill").GetComponent<Image>();
+        HealthText = transform.Find("Health Text").GetComponent<TextMeshProUGUI>();
 
         HealthBarFill.fillAmount = 1f;
     }
@@ -32,6 +34,11 @@ public class HealthBarUI : MonoBehaviour
     private void OnEnable()
     {
         Target.OnHealthChanged += UpdateTargetFillAmount;
+    }
+
+    private void Start()
+    {
+        UpdateHealthText(Target.GetCurrentHealth(), Target.GetMaxHealth());
     }
 
     private void OnDisable()
@@ -43,6 +50,8 @@ public class HealthBarUI : MonoBehaviour
     #region Health Bar Logic
     private void UpdateTargetFillAmount(int CurrentHealth, int MaxHealth)
     {
+        UpdateHealthText(CurrentHealth, MaxHealth);
+
         float NewTargetFillAmount = (float)CurrentHealth / MaxHealth;
 
         if (FillRoutine != null)
@@ -51,6 +60,11 @@ public class HealthBarUI : MonoBehaviour
         }
 
         FillRoutine = StartCoroutine(UpdateHealthBarFillRoutine(NewTargetFillAmount));
+    }
+
+    private void UpdateHealthText(int CurrentHealth, int MaxHealth)
+    {
+        HealthText.text = CurrentHealth + " / " + MaxHealth;
     }
 
     private IEnumerator UpdateHealthBarFillRoutine(float NewTargetFillAmount)

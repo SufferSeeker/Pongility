@@ -38,6 +38,16 @@ public class DamageableTarget : MonoBehaviour
     {
         return TargetSide;
     }
+
+    public int GetCurrentHealth()
+    {
+        return CurrentHealth;
+    }
+
+    public int GetMaxHealth()
+    {
+        return MaxHealth;
+    }
     #endregion
 
     #region Health Methods

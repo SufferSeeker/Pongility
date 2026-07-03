@@ -65,7 +65,6 @@ public class MatchManager : MonoBehaviour
     #region Unity Methods
     private void Awake()
     {
-
         FindCoreReferences();
         FindRacketReferences();
         FindHealthReferences();
@@ -125,7 +124,7 @@ public class MatchManager : MonoBehaviour
 
         if (IsMatchFinished == true) return;
 
-        StartCoroutine(RoundResetRoutine(false));
+        StartCoroutine(RoundResetRoutine(true));
     }
 
     private void HandleTargetDied(MatchSide DeadSide, DamageInfo DeathDamageInfo)
@@ -416,7 +415,7 @@ public class MatchManager : MonoBehaviour
         if (IsMatchFinished == true) return;
         if (IsRoundResetting == true) return;
 
-        StartCoroutine(RoundResetRoutine(false));
+        StartCoroutine(RoundResetRoutine(true));
 
         Debug.Log("Debug requested round reset.");
     }
@@ -509,7 +508,7 @@ public class MatchManager : MonoBehaviour
 
         if (IsMatchFinished == true) return;
 
-        StartCoroutine(RoundResetRoutine(false));
+        StartCoroutine(RoundResetRoutine(true));
     }
     #endregion
 

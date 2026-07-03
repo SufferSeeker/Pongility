@@ -68,6 +68,8 @@ public class StatusEffectReceiver : MonoBehaviour
 
         ApplyStatusEffectTick(NewActiveStatusEffect);
 
+        if (ActiveStatusEffects.Contains(NewActiveStatusEffect) == false) return;
+
         if (NewActiveStatusEffect.HasRemainingTicks() == true)
         {
             int NewStatusEffectIndex = ActiveStatusEffects.IndexOf(NewActiveStatusEffect);
@@ -84,11 +86,16 @@ public class StatusEffectReceiver : MonoBehaviour
 
         ExistingStatusEffect.Reapply(OwnerSide);
 
-        StopCoroutine(ActiveStatusEffectRoutines[ExistingStatusEffectIndex]);
+        if (ActiveStatusEffectRoutines[ExistingStatusEffectIndex] != null)
+        {
+            StopCoroutine(ActiveStatusEffectRoutines[ExistingStatusEffectIndex]);
+        }
 
         Debug.Log(gameObject.name + " reapplied status effect: " + ExistingStatusEffect.GetStatusEffectType() + " Stack: " + ExistingStatusEffect.GetCurrentStackCount());
 
         ApplyStatusEffectTick(ExistingStatusEffect);
+
+        if (ActiveStatusEffects.Contains(ExistingStatusEffect) == false) return;
 
         if (ExistingStatusEffect.HasRemainingTicks() == true)
         {
@@ -162,7 +169,10 @@ public class StatusEffectReceiver : MonoBehaviour
 
         for (int i = 0; i < ActiveStatusEffectRoutines.Count; i++)
         {
-            StopCoroutine(ActiveStatusEffectRoutines[i]);
+            if (ActiveStatusEffectRoutines[i] != null)
+            {
+                StopCoroutine(ActiveStatusEffectRoutines[i]);
+            }
         }
 
         ActiveStatusEffects.Clear();
