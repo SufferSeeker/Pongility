@@ -1,0 +1,22 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ab7e7ae908239c14da4cde0ebfa71724, type: 3}
+  m_Name: Poison
+  m_EditorClassIdentifier: 
+  AbilityName: Poison
+  AbilityIcon: {fileID: 21300000, guid: 312525c5a7d7289498e8c5755335776d, type: 3}
+  AbilityDescription: Applies poison to the opponent over time.
+  TargetType: 1
+  DeliveryType: 1
+  AbilityPrefab: {fileID: 1447219839051344035, guid: d7bdb102bcd44ac408bfecda1d265c89, type: 3}
+  SpawnPointType: 0
+  ActiveLifeTime: 6

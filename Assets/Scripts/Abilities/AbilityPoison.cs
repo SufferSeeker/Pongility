@@ -1,11 +1,14 @@
 using UnityEngine;
 
-public class AbilityFireball : MonoBehaviour, IUsableAbility, IDeflectable
+public class AbilityPoison : MonoBehaviour, IUsableAbility, IDeflectable
 {
     #region Variables
     [Header("References")]
-    [SerializeField] private Animator FireballAnimator;
-    [SerializeField] private Collider2D FireballCollider;
+    [SerializeField] private Animator PoisonAnimator;
+    [SerializeField] private Collider2D PoisonCollider;
+
+    [Header("Status Effect Settings")]
+    [SerializeField] private StatusEffectDefinition PoisonStatusEffectDefinition;
 
     [Header("Animation Settings")]
     [SerializeField] private string CastTriggerName = "Cast";
@@ -15,11 +18,6 @@ public class AbilityFireball : MonoBehaviour, IUsableAbility, IDeflectable
     [Header("Movement Settings")]
     [SerializeField] private float MovementSpeed = 6f;
     [SerializeField] private Vector2 MoveDirection;
-
-    [Header("Damage Settings")]
-    [SerializeField] private int DamageAmount = 20;
-    [SerializeField] private DamageSourceType DamageSourceType = DamageSourceType.Ability;
-    [SerializeField] private DeathVisualType DeathVisualType = DeathVisualType.FireballBurn;
 
     [Header("State")]
     [SerializeField] private MatchSide OwnerSide;
@@ -31,14 +29,14 @@ public class AbilityFireball : MonoBehaviour, IUsableAbility, IDeflectable
     #region Unity Methods
     private void Awake()
     {
-        FireballAnimator = GetComponent<Animator>();
-        FireballCollider = GetComponent<Collider2D>();
+        PoisonAnimator = GetComponent<Animator>();
+        PoisonCollider = GetComponent<Collider2D>();
 
         CanMove = false;
         HasImpacted = false;
         IsFrozenByRoundEnd = false;
 
-        FireballCollider.enabled = false;
+        PoisonCollider.enabled = false;
     }
 
     private void OnEnable()
@@ -51,7 +49,7 @@ public class AbilityFireball : MonoBehaviour, IUsableAbility, IDeflectable
     {
         if (CanMove == false) return;
 
-        MoveFireball();
+        MovePoison();
     }
 
     private void OnDisable()
@@ -67,13 +65,15 @@ public class AbilityFireball : MonoBehaviour, IUsableAbility, IDeflectable
 
         DamageableTarget Target = Collision.GetComponent<DamageableTarget>();
 
-        if (CanDamageTarget(Target) == false) return;
+        if (CanApplyPoison(Target) == false) return;
+
+        StatusEffectReceiver TargetStatusEffectReceiver = Collision.GetComponent<StatusEffectReceiver>();
+
+        if (TargetStatusEffectReceiver == null) return;
 
         StartImpact();
 
-        DamageInfo NewDamageInfo = CreateDamageInfo();
-
-        Target.TakeDamage(NewDamageInfo);
+        TargetStatusEffectReceiver.ApplyStatusEffect(PoisonStatusEffectDefinition, OwnerSide);
     }
     #endregion
 
@@ -83,7 +83,7 @@ public class AbilityFireball : MonoBehaviour, IUsableAbility, IDeflectable
         MoveDirection = Direction.normalized;
         OwnerSide = NewOwnerSide;
 
-        SetFireballRotation();
+        SetPoisonRotation();
 
         transform.SetParent(CastParent, true);
         transform.localPosition = Vector3.zero;
@@ -91,7 +91,7 @@ public class AbilityFireball : MonoBehaviour, IUsableAbility, IDeflectable
         PlayAnimationTrigger(CastTriggerName);
     }
 
-    private void SetFireballRotation()
+    private void SetPoisonRotation()
     {
         if (MoveDirection.y > 0f)
         {
@@ -106,14 +106,14 @@ public class AbilityFireball : MonoBehaviour, IUsableAbility, IDeflectable
     #endregion
 
     #region Movement
-    private void MoveFireball()
+    private void MovePoison()
     {
         transform.position += (Vector3)(MovementSpeed * Time.deltaTime * MoveDirection);
     }
     #endregion
 
     #region Impact
-    private bool CanDamageTarget(DamageableTarget Target)
+    private bool CanApplyPoison(DamageableTarget Target)
     {
         if (Target == null) return false;
 
@@ -122,24 +122,12 @@ public class AbilityFireball : MonoBehaviour, IUsableAbility, IDeflectable
         return true;
     }
 
-    private DamageInfo CreateDamageInfo()
-    {
-        DamageInfo NewDamageInfo = new DamageInfo(
-            DamageAmount,
-            OwnerSide,
-            DamageSourceType,
-            DeathVisualType
-        );
-
-        return NewDamageInfo;
-    }
-
     private void StartImpact()
     {
         HasImpacted = true;
         CanMove = false;
 
-        FireballCollider.enabled = false;
+        PoisonCollider.enabled = false;
 
         PlayAnimationTrigger(ExplodeTriggerName);
     }
@@ -160,7 +148,7 @@ public class AbilityFireball : MonoBehaviour, IUsableAbility, IDeflectable
 
         MoveDirection = -MoveDirection;
 
-        SetFireballRotation();
+        SetPoisonRotation();
     }
     #endregion
 
@@ -171,13 +159,13 @@ public class AbilityFireball : MonoBehaviour, IUsableAbility, IDeflectable
 
         CanMove = false;
 
-        FireballCollider.enabled = false;
+        PoisonCollider.enabled = false;
 
         if (HasImpacted == true) return;
-        
+
         IsFrozenByRoundEnd = true;
 
-        FireballAnimator.speed = 0f;
+        PoisonAnimator.speed = 0f;
     }
     #endregion
 
@@ -191,12 +179,12 @@ public class AbilityFireball : MonoBehaviour, IUsableAbility, IDeflectable
 
         PlayAnimationTrigger(ForwardTriggerName);
 
-        FireballCollider.enabled = true;
+        PoisonCollider.enabled = true;
 
         CanMove = true;
     }
 
-    public void DestroyFireball()
+    public void DestroyPoison()
     {
         Destroy(gameObject);
     }
@@ -205,7 +193,7 @@ public class AbilityFireball : MonoBehaviour, IUsableAbility, IDeflectable
     #region Helper Methods
     private void PlayAnimationTrigger(string TriggerName)
     {
-        FireballAnimator.SetTrigger(TriggerName);
+        PoisonAnimator.SetTrigger(TriggerName);
     }
     #endregion
 }

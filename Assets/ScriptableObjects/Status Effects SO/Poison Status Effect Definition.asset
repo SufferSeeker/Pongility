@@ -16,6 +16,6 @@ MonoBehaviour:
   DamageSourceType: 3
   DeathVisualType: 3
   DamagePerTick: 5
-  TickCount: 3
+  TickCount: 6
   TickInterval: 1
   MaxStackCount: 3
